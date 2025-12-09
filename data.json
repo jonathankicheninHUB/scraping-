@@ -1,12 +1,13 @@
 {
   "meta": {
-    "last_update": "09/12/2025"
+    "last_update": "09/12/2025",
+    "source": "API Géo & Simulations"
   },
   "kpi": {
-    "pop": "57495",
-    "chomage": "30.8",
+    "pop": "156 149",
+    "chomage": "29.5",
     "participation": "61.2",
-    "secu_total": "2329"
+    "secu_total": "2336"
   },
   "elections": {
     "labels": [
@@ -34,18 +35,18 @@
       2023
     ],
     "cambriolages": [
-      209,
-      204,
-      203,
-      219,
-      199
+      180,
+      195,
+      210,
+      205,
+      190
     ],
     "vols": [
-      120,
+      140,
       130,
-      129,
-      141,
-      136
+      125,
+      145,
+      135
     ]
   },
   "socio": {
