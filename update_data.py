@@ -1,17 +1,46 @@
 import json
 import random
 import datetime
+import requests # On utilise la librairie pour aller sur internet
 
-# 1. Génération des données (Simulation ou Scraper réel ici)
+# --- CONFIGURATION ---
+CODE_INSEE = "97411" # Saint-André
+API_GEO = f"https://geo.api.gouv.fr/communes/{CODE_INSEE}?fields=nom,population,surface,codesPostaux&format=json"
+
+def get_real_geo_data():
+    """Récupère les vraies données de l'API Géo de l'État."""
+    try:
+        print(f"Connexion à l'API pour {CODE_INSEE}...")
+        response = requests.get(API_GEO, timeout=10)
+        response.raise_for_status()
+        data = response.json()
+        print("Données reçues :", data)
+        return data
+    except Exception as e:
+        print(f"Erreur API : {e}")
+        # Valeurs de secours si l'API est en panne
+        return {"population": 57000, "surface": 5300}
+
+# --- MAIN ---
 now = datetime.datetime.now().strftime("%d/%m/%Y")
+geo_data = get_real_geo_data()
 
-data = {
-    "meta": { "last_update": now },
+# Calculs dérivés (simulés sur la base du réel)
+pop_officielle = geo_data.get('population', 57000)
+chomage_estime = 29.5 # Chiffre dur à avoir en temps réel, on le fixe
+participation_derniere = 61.2 
+
+# Structure finale pour le dashboard
+output = {
+    "meta": { 
+        "last_update": now,
+        "source": "API Géo & Simulations"
+    },
     "kpi": { 
-        "pop": str(57000 + random.randint(0, 500)), 
-        "chomage": str(round(random.uniform(28, 31), 1)), 
-        "participation": "61.2", 
-        "secu_total": str(random.randint(2300, 2500)) 
+        "pop": f"{pop_officielle:,}".replace(",", " "), # Formatage 57 000
+        "chomage": str(chomage_estime), 
+        "participation": str(participation_derniere), 
+        "secu_total": str(random.randint(2300, 2400)) # Reste simulé pour l'instant
     },
     "elections": {
         "labels": ["Saint-André Avance", "Le Renouveau", "Action Citoyenne"],
@@ -20,8 +49,8 @@ data = {
     },
     "securite": {
         "annees": [2019, 2020, 2021, 2022, 2023],
-        "cambriolages": [random.randint(180, 220) for _ in range(5)],
-        "vols": [random.randint(120, 150) for _ in range(5)]
+        "cambriolages": [180, 195, 210, 205, 190],
+        "vols": [140, 130, 125, 145, 135]
     },
     "socio": {
         "annees": [2019, 2020, 2021, 2022, 2023],
@@ -34,8 +63,8 @@ data = {
     ]
 }
 
-# 2. Sauvegarde dans data.json
+# Sauvegarde
 with open('data.json', 'w', encoding='utf-8') as f:
-    json.dump(data, f, ensure_ascii=False, indent=2)
+    json.dump(output, f, ensure_ascii=False, indent=2)
 
-print("data.json généré avec succès.")
+print("Mise à jour terminée avec succès.")
