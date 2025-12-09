@@ -1,0 +1,41 @@
+import json
+import random
+import datetime
+
+# 1. Génération des données (Simulation ou Scraper réel ici)
+now = datetime.datetime.now().strftime("%d/%m/%Y")
+
+data = {
+    "meta": { "last_update": now },
+    "kpi": { 
+        "pop": str(57000 + random.randint(0, 500)), 
+        "chomage": str(round(random.uniform(28, 31), 1)), 
+        "participation": "61.2", 
+        "secu_total": str(random.randint(2300, 2500)) 
+    },
+    "elections": {
+        "labels": ["Saint-André Avance", "Le Renouveau", "Action Citoyenne"],
+        "votes": [45.2, 38.5, 16.3],
+        "sieges": [28, 9, 2]
+    },
+    "securite": {
+        "annees": [2019, 2020, 2021, 2022, 2023],
+        "cambriolages": [random.randint(180, 220) for _ in range(5)],
+        "vols": [random.randint(120, 150) for _ in range(5)]
+    },
+    "socio": {
+        "annees": [2019, 2020, 2021, 2022, 2023],
+        "chomage": [31.0, 32.5, 30.8, 29.9, 29.5]
+    },
+    "elus": [
+        { "nom": "BEDIER Joé", "fonction": "Maire", "groupe": "Majorité", "mandat": "2020-2026" },
+        { "nom": "PAYET Marie", "fonction": "1ère Adjointe", "groupe": "Majorité", "mandat": "2020-2026" },
+        { "nom": "VIRAPOULLE J.M", "fonction": "Conseiller", "groupe": "Opposition", "mandat": "2020-2026" }
+    ]
+}
+
+# 2. Sauvegarde dans data.json
+with open('data.json', 'w', encoding='utf-8') as f:
+    json.dump(data, f, ensure_ascii=False, indent=2)
+
+print("data.json généré avec succès.")
