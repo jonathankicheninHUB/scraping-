@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Observatoire Saint-André (97440)</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #0d6efd;
+            --bg-color: #f8f9fa;
+            --card-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        body { background-color: var(--bg-color); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .dashboard-header { background: linear-gradient(135deg, #0d6efd 0%, #0043a8 100%); color: white; padding: 2rem 0; margin-bottom: 2rem; }
+        .stat-card { background: white; border-radius: 10px; padding: 1.5rem; box-shadow: var(--card-shadow); border: none; height: 100%; transition: transform 0.2s; }
+        .stat-card:hover { transform: translateY(-5px); }
+        .stat-icon { font-size: 2.5rem; color: var(--primary-color); opacity: 0.2; position: absolute; right: 20px; top: 20px; }
+        .chart-container { background: white; border-radius: 10px; padding: 1rem; box-shadow: var(--card-shadow); margin-bottom: 1.5rem; }
+        .table-responsive { background: white; border-radius: 10px; box-shadow: var(--card-shadow); padding: 1rem; }
+        .badge-pol { font-size: 0.8em; padding: 0.4em 0.8em; }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-header text-center">
+        <div class="container">
+            <h1 class="display-5 fw-bold"><i class="fas fa-chart-line"></i> Observatoire Saint-André</h1>
+            <p class="lead">Données électorales, socio-économiques et sécurité (97440)</p>
+            <span class="badge bg-light text-primary">Mise à jour : <span id="last-update">Calculating...</span></span>
+        </div>
+    </div>
+
+    <div class="container mb-5">
+        
+        <div class="row g-4 mb-4">
+            <div class="col-md-3">
+                <div class="stat-card position-relative">
+                    <h6 class="text-muted text-uppercase">Population</h6>
+                    <h2 class="fw-bold" id="kpi-pop">--</h2>
+                    <p class="text-success small mb-0"><i class="fas fa-arrow-up"></i> +1.2% / an</p>
+                    <i class="fas fa-users stat-icon"></i>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card position-relative">
+                    <h6 class="text-muted text-uppercase">Taux Chômage</h6>
+                    <h2 class="fw-bold" id="kpi-chomage">--%</h2>
+                    <p class="text-danger small mb-0">Moyenne 974</p>
+                    <i class="fas fa-briefcase stat-icon"></i>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card position-relative">
+                    <h6 class="text-muted text-uppercase">Participation (Muni. 2020)</h6>
+                    <h2 class="fw-bold" id="kpi-participation">--%</h2>
+                    <p class="text-muted small mb-0">2nd Tour</p>
+                    <i class="fas fa-vote-yea stat-icon"></i>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card position-relative">
+                    <h6 class="text-muted text-uppercase">Délinquance</h6>
+                    <h2 class="fw-bold" id="kpi-secu">--</h2>
+                    <p class="text-muted small mb-0">Incidents (2023)</p>
+                    <i class="fas fa-shield-alt stat-icon"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="chart-container">
+                    <h5 class="mb-4">Résultats Municipales (Simulation 2ème Tour)</h5>
+                    <canvas id="electionChart"></canvas>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="chart-container">
+                    <h5 class="mb-4">Répartition Sièges</h5>
+                    <canvas id="siegeChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="chart-container">
+                    <h5 class="mb-4">Évolution Délinquance (ONDRP Simulé)</h5>
+                    <canvas id="secuChart"></canvas>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="chart-container">
+                    <h5 class="mb-4">Évolution Population & Chômage</h5>
+                    <canvas id="socioChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive">
+                    <h5 class="mb-3">Élus Locaux (Extrait)</h5>
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Nom</th>
+                                <th>Fonction</th>
+                                <th>Groupe</th>
+                                <th>Mandat</th>
+                            </tr>
+                        </thead>
+                        <tbody id="elus-table-body">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center py-4 text-muted small">
+        <p>&copy; 2024 Data Saint-André. Données publiques agrégées (Ministère Intérieur, INSEE, ONDRP).</p>
+        <p>Généré via Python Scraper & GitHub Pages.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        // --- 1. DONNÉES SIMULÉES (MOCK DATA) ---
+        // Dans la version finale, ces données seront chargées depuis 'data.json' généré par Python.
+        const mockData = {
+            meta: { last_update: new Date().toLocaleDateString() },
+            kpi: { pop: "57,200", chomage: "29.5", participation: "61.2", secu_total: "2,450" },
+            elections: {
+                labels: ["Saint-André Avance (J.B.)", "Le Renouveau (P.V.)", "Action Citoyenne (L.M.)"],
+                votes: [45.2, 38.5, 16.3],
+                sieges: [28, 9, 2]
+            },
+            securite: {
+                annees: [2019, 2020, 2021, 2022, 2023],
+                cambriolages: [210, 180, 195, 205, 190],
+                vols: [150, 120, 130, 145, 140]
+            },
+            socio: {
+                annees: [2019, 2020, 2021, 2022, 2023],
+                chomage: [31.0, 32.5, 30.8, 29.9, 29.5]
+            },
+            elus: [
+                { nom: "BEDIER Joé", fonction: "Maire", groupe: "Majorité", mandat: "2020-2026" },
+                { nom: "VIRAPOULLE Jean-Marie", fonction: "Conseiller Mun.", groupe: "Opposition", mandat: "2020-2026" },
+                { nom: "PAYET Marie", fonction: "1ère Adjointe", groupe: "Majorité", mandat: "2020-2026" },
+                { nom: "GRONDIN Pierre", fonction: "Adjoint Urbanisme", groupe: "Majorité", mandat: "2020-2026" }
+            ]
+        };
+
+        // --- 2. LOGIQUE D'AFFICHAGE ---
+
+        // Remplir les KPI
+        document.getElementById('last-update').innerText = mockData.meta.last_update;
+        document.getElementById('kpi-pop').innerText = mockData.kpi.pop;
+        document.getElementById('kpi-chomage').innerText = mockData.kpi.chomage + '%';
+        document.getElementById('kpi-participation').innerText = mockData.kpi.participation + '%';
+        document.getElementById('kpi-secu').innerText = mockData.kpi.secu_total;
+
+        // Graphique Elections (Bar)
+        new Chart(document.getElementById('electionChart'), {
+            type: 'bar',
+            data: {
+                labels: mockData.elections.labels,
+                datasets: [{
+                    label: '% des Voix',
+                    data: mockData.elections.votes,
+                    backgroundColor: ['#0d6efd', '#dc3545', '#ffc107'],
+                    borderRadius: 5
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { display: false } } }
+        });
+
+        // Graphique Sièges (Doughnut)
+        new Chart(document.getElementById('siegeChart'), {
+            type: 'doughnut',
+            data: {
+                labels: mockData.elections.labels,
+                datasets: [{
+                    data: mockData.elections.sieges,
+                    backgroundColor: ['#0d6efd', '#dc3545', '#ffc107']
+                }]
+            }
+        });
+
+        // Graphique Sécurité (Line)
+        new Chart(document.getElementById('secuChart'), {
+            type: 'line',
+            data: {
+                labels: mockData.securite.annees,
+                datasets: [
+                    {
+                        label: 'Cambriolages',
+                        data: mockData.securite.cambriolages,
+                        borderColor: '#fd7e14',
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Vols Véhicules',
+                        data: mockData.securite.vols,
+                        borderColor: '#6c757d',
+                        tension: 0.3
+                    }
+                ]
+            },
+            options: { responsive: true, interaction: { mode: 'index', intersect: false } }
+        });
+
+        // Graphique Socio (Line filled)
+        new Chart(document.getElementById('socioChart'), {
+            type: 'line',
+            data: {
+                labels: mockData.socio.annees,
+                datasets: [{
+                    label: 'Taux Chômage (%)',
+                    data: mockData.socio.chomage,
+                    borderColor: '#20c997',
+                    backgroundColor: 'rgba(32, 201, 151, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            }
+        });
+
+        // Remplir Tableau Élus
+        const tableBody = document.getElementById('elus-table-body');
+        mockData.elus.forEach(elu => {
+            const row = `
+                <tr>
+                    <td class="fw-bold">${elu.nom}</td>
+                    <td>${elu.fonction}</td>
+                    <td><span class="badge ${elu.groupe === 'Majorité' ? 'bg-success' : 'bg-secondary'} badge-pol">${elu.groupe}</span></td>
+                    <td>${elu.mandat}</td>
+                </tr>
+            `;
+            tableBody.innerHTML += row;
+        });
+    </script>
+</body>
+</html>
