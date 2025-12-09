@@ -1,13 +1,13 @@
 {
   "meta": {
     "last_update": "09/12/2025",
-    "source": "API Géo & Simulations"
+    "source": "API Géo + Wikipédia (Scraping)"
   },
   "kpi": {
     "pop": "156 149",
     "chomage": "29.5",
     "participation": "61.2",
-    "secu_total": "2336"
+    "secu_total": "2375"
   },
   "elections": {
     "labels": [
@@ -67,7 +67,7 @@
   },
   "elus": [
     {
-      "nom": "BEDIER Joé",
+      "nom": "Joé Bédier (SE) 2020-2026",
       "fonction": "Maire",
       "groupe": "Majorité",
       "mandat": "2020-2026"
