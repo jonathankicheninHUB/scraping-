@@ -1,33 +1,37 @@
-name: Debug Data Pipeline
+name: Update Data
 
 on:
-  workflow_dispatch: # Lancement manuel uniquement pour tester
+  schedule:
+    - cron: '0 6 * * 1' # Lundi à 6h du matin
+  workflow_dispatch: # Permet de lancer manuellement le bouton "Run workflow"
 
 jobs:
-  debug-job:
+  build:
     runs-on: ubuntu-latest
+    
+    # 🚨 C'EST LA LIGNE LA PLUS IMPORTANTE
     permissions:
-      contents: write # INDISPENSABLE
+      contents: write
 
     steps:
-      - name: 1. Récupération du code
+      - name: Récupération du code
         uses: actions/checkout@v4
 
-      - name: 2. Installation Python
+      - name: Installation Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
 
-      - name: 3. Installation des librairies
+      - name: Installation des librairies
         run: |
           python -m pip install --upgrade pip
-          pip install requests beautifulsoup4
+          pip install requests
 
-      - name: 4. Lancement du Script d'Audit
+      - name: Lancement du script
         run: python update_data.py
 
-      - name: 5. Sauvegarde et Commit
+      - name: Sauvegarde des résultats
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Debug Log Update"
+          commit_message: "Mise à jour automatique des données"
           file_pattern: data.json
