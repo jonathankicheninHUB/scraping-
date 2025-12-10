@@ -3,260 +3,189 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Observatoire Saint-André - Historique</title>
+    <title>Analyse Politique Saint-André</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; }
-        .dashboard-header { background: linear-gradient(135deg, #0d6efd 0%, #0043a8 100%); color: white; padding: 2rem 0; margin-bottom: 2rem; }
-        .stat-card { background: white; border-radius: 10px; padding: 1.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); height: 100%; }
-        .chart-container { background: white; border-radius: 10px; padding: 1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 1.5rem; }
-        .table-responsive { background: white; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 1rem; }
-        .stat-icon { font-size: 2.5rem; color: #0d6efd; opacity: 0.2; position: absolute; right: 20px; top: 20px; }
+        body { background-color: #f0f2f5; font-family: 'Segoe UI', sans-serif; }
+        .header { background: #2c3e50; color: white; padding: 2rem 0; margin-bottom: 2rem; border-bottom: 5px solid #e74c3c; }
+        .card { border: none; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 1.5rem; }
+        .card-header { background: white; border-bottom: 1px solid #eee; font-weight: bold; color: #2c3e50; }
+        .kpi-val { font-size: 2rem; font-weight: bold; }
+        .text-left { text-align: left !important; }
+        .progress { height: 25px; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="dashboard-header text-center">
-        <div class="container">
-            <h1 class="display-5 fw-bold"><i class="fas fa-history"></i> Observatoire Saint-André</h1>
-            <p class="lead">Archives Complètes : 1968 - 2023</p>
-            <span class="badge bg-light text-primary">Dernière maj : <span id="last-update">...</span></span>
-        </div>
+<div class="header text-center">
+    <h1><i class="fas fa-vote-yea"></i> Analyse Électorale Saint-André</h1>
+    <p>Dynamiques de campagne, Reports de voix & Sociologie politique</p>
+    <small>Mise à jour : <span id="date">...</span></small>
+</div>
+
+<div class="container">
+    
+    <div class="row text-center mb-4">
+        <div class="col-md-3"><div class="card p-3"><small class="text-muted">Maire Actuel</small><div class="kpi-val" id="maire">--</div><span class="badge bg-danger" id="parti">--</span></div></div>
+        <div class="col-md-3"><div class="card p-3"><small class="text-muted">Population</small><div class="kpi-val" id="pop">--</div></div></div>
+        <div class="col-md-3"><div class="card p-3"><small class="text-muted">Dette / Hab</small><div class="kpi-val text-warning" id="dette">--</div></div></div>
+        <div class="col-md-3"><div class="card p-3"><small class="text-muted">Chômage</small><div class="kpi-val" id="chomage">--</div></div></div>
     </div>
 
-    <div class="container mb-5">
-        
-        <div class="row g-4 mb-4">
-            <div class="col-md-3">
-                <div class="stat-card position-relative">
-                    <h6 class="text-muted text-uppercase">Population 2022</h6>
-                    <h2 class="fw-bold" id="kpi-pop">--</h2>
-                    <i class="fas fa-users stat-icon"></i>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stat-card position-relative">
-                    <h6 class="text-muted text-uppercase">Dette / Habitant</h6>
-                    <h2 class="fw-bold text-danger" id="kpi-dette">--</h2>
-                    <i class="fas fa-balance-scale-right stat-icon text-danger"></i>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stat-card position-relative">
-                    <h6 class="text-muted text-uppercase">Impôt Foncier</h6>
-                    <h2 class="fw-bold" id="kpi-foncier">-- %</h2>
-                    <i class="fas fa-home stat-icon"></i>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stat-card position-relative">
-                    <h6 class="text-muted text-uppercase">Maire Actuel</h6>
-                    <h3 class="fw-bold" id="kpi-maire" style="font-size: 1.4rem;">--</h3>
-                    <i class="fas fa-user-tie stat-icon"></i>
+    <h4 class="mb-3 text-uppercase fw-bold text-secondary"><i class="fas fa-chess"></i> La Mécanique de la Victoire (2020)</h4>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header">1er Tour : L'Éparpillement</div>
+                <div class="card-body">
+                    <canvas id="t1Chart"></canvas>
+                    <p class="mt-3 small text-muted">Au 1er tour, J.M. Virapoullé (Droite) était en tête (31%). La gauche était divisée entre Bédier (24%) et Fruteau (17%).</p>
                 </div>
             </div>
         </div>
-
-        <div class="row">
-             <div class="col-12">
-                <div class="chart-container">
-                    <h5 class="mb-3">Explosion Démographique (1968-2022)</h5>
-                    <canvas id="popChart" height="80"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="chart-container">
-                    <h5 class="mb-3">Finances : Dette vs Taxe Foncière (2013-2023)</h5>
-                    <canvas id="financeChart" height="100"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-8">
-                <div class="chart-container">
-                    <h5 class="mb-3">Archives Électorales</h5>
-                    <select id="election-selector" class="form-select mb-3" onchange="updateElectionChart(this.value)">
-                        <option value="2020">2020 - Victoire J. Bédier</option>
-                        <option value="2014">2014 - Victoire J.P. Virapoullé</option>
-                        <option value="2008">2008 - Victoire E. Fruteau</option>
-                    </select>
-                    <canvas id="electionChart"></canvas>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="chart-container">
-                    <h5 class="mb-4">Sièges (Majorité/Oppos.)</h5>
-                    <canvas id="siegeChart"></canvas>
-                </div>
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="chart-container">
-                    <h5 class="mb-3">Chômage (2008-2023)</h5>
-                    <canvas id="chomageChart"></canvas>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="chart-container">
-                    <h5 class="mb-3">Cambriolages (2016-2023)</h5>
-                    <canvas id="secuChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mt-4">
-            <div class="col-12">
-                <div class="table-responsive">
-                    <h5 class="mb-3">Conseil Municipal Actuel</h5>
-                    <table class="table table-hover align-middle">
-                        <thead class="table-light"><tr><th>Nom</th><th>Fonction</th><th>Groupe</th><th>Mandat</th></tr></thead>
-                        <tbody id="elus-table-body"></tbody>
-                    </table>
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header">2nd Tour : L'Alliance Décisive</div>
+                <div class="card-body">
+                    <canvas id="t2Chart"></canvas>
+                    <div class="alert alert-info mt-3 small">
+                        <i class="fas fa-info-circle"></i> <strong>Analyse :</strong> La fusion des listes Bédier + Fruteau a créé une dynamique majoritaire (52%), renversant l'avance de la droite.
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        let allData;
-        let charts = {};
+    <h4 class="mb-3 mt-4 text-uppercase fw-bold text-secondary"><i class="fas fa-globe-europe"></i> Le Poids Politique Réel</h4>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">Présidentielle 2022 à Saint-André (1er Tour)</div>
+                <div class="card-body">
+                    <p class="small text-muted mb-3">Ce graphique montre l'orientation politique profonde des habitants, hors enjeux de personnes locales.</p>
+                    <canvas id="presChart" height="150"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Évolution Participation</div>
+                <div class="card-body">
+                    <canvas id="abstentionChart"></canvas>
+                    <p class="small text-muted mt-2 text-center">Le réservoir de voix (Abstention)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-2">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">Contexte : Évolution de la Dette (Le Bilan)</div>
+                <div class="card-body">
+                     <canvas id="detteChart" height="80"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        async function loadDashboard() {
-            try {
-                const response = await fetch('data.json');
-                if (!response.ok) throw new Error("Erreur fichier");
-                allData = await response.json();
+</div>
 
-                // KPI
-                document.getElementById('last-update').innerText = allData.meta.last_update;
-                document.getElementById('kpi-pop').innerText = allData.kpi.pop;
-                document.getElementById('kpi-maire').innerText = allData.kpi.maire;
-                document.getElementById('kpi-dette').innerText = allData.finance_current.dette_par_habitant + " €";
-                document.getElementById('kpi-foncier').innerText = allData.finance_current.taux_foncier_bati + " %";
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    async function init() {
+        try {
+            const r = await fetch('data.json');
+            if(!r.ok) throw new Error();
+            const data = await r.json();
 
-                // CHART 1: DEMOGRAPHIE (1968-2022)
-                const ctxPop = document.getElementById('popChart').getContext('2d');
-                new Chart(ctxPop, {
-                    type: 'line',
-                    data: {
-                        labels: allData.history.demo.annees,
-                        datasets: [{
-                            label: 'Habitants',
-                            data: allData.history.demo.population,
-                            borderColor: '#0d6efd',
-                            backgroundColor: 'rgba(13, 110, 253, 0.1)',
-                            fill: true, tension: 0.4
-                        }]
-                    }
-                });
+            // KPI
+            document.getElementById('date').innerText = data.meta.last_update;
+            document.getElementById('maire').innerText = data.kpi.maire.split(' ')[1]; // Juste le nom
+            document.getElementById('parti').innerText = data.kpi.parti_maire;
+            document.getElementById('pop').innerText = data.kpi.pop;
+            document.getElementById('dette').innerText = data.kpi.dette;
+            document.getElementById('chomage').innerText = data.kpi.chomage;
 
-                // CHART 2: FINANCES (Double Axe)
-                const ctxFin = document.getElementById('financeChart').getContext('2d');
-                new Chart(ctxFin, {
-                    type: 'line',
-                    data: {
-                        labels: allData.history.finance.annees,
-                        datasets: [
-                            {
-                                label: 'Dette (€/hab)',
-                                data: allData.history.finance.dette_par_hab,
-                                borderColor: '#dc3545',
-                                yAxisID: 'y'
-                            },
-                            {
-                                label: 'Taux Foncier (%)',
-                                data: allData.history.finance.taux_foncier,
-                                borderColor: '#198754',
-                                yAxisID: 'y1'
-                            }
-                        ]
-                    },
-                    options: {
-                        scales: {
-                            y: { type: 'linear', display: true, position: 'left' },
-                            y1: { type: 'linear', display: true, position: 'right', grid: { drawOnChartArea: false } }
-                        }
-                    }
-                });
-
-                // CHART 3: CHOMAGE
-                const ctxCho = document.getElementById('chomageChart').getContext('2d');
-                new Chart(ctxCho, {
-                    type: 'line',
-                    data: {
-                        labels: allData.history.chomage.annees,
-                        datasets: [{
-                            label: 'Taux Chômage (%)',
-                            data: allData.history.chomage.taux,
-                            borderColor: '#fd7e14',
-                            tension: 0.3
-                        }]
-                    }
-                });
-
-                // CHART 4: SECU
-                const ctxSec = document.getElementById('secuChart').getContext('2d');
-                new Chart(ctxSec, {
-                    type: 'bar',
-                    data: {
-                        labels: allData.history.secu.annees,
-                        datasets: [{
-                            label: 'Cambriolages',
-                            data: allData.history.secu.cambriolages,
-                            backgroundColor: '#6c757d'
-                        }]
-                    }
-                });
-
-                // POLITIQUE (Initialisation)
-                initPolitiqueCharts();
-                updateElectionChart('2020');
-
-                // TABLEAU ELUS
-                const tBody = document.getElementById('elus-table-body');
-                tBody.innerHTML = "";
-                allData.elus.forEach(e => {
-                    tBody.innerHTML += `<tr><td class="fw-bold">${e.nom}</td><td>${e.fonction}</td><td><span class="badge bg-secondary">${e.groupe}</span></td><td>${e.mandat}</td></tr>`;
-                });
-
-            } catch (e) { console.error(e); }
-        }
-
-        function initPolitiqueCharts() {
-            charts.elec = new Chart(document.getElementById('electionChart'), {
-                type: 'bar', data: { labels: [], datasets: [{ data: [] }] },
-                options: { indexAxis: 'y', plugins: { legend: { display: false } } }
+            // CHART 1: MUNICIPALES T1
+            new Chart(document.getElementById('t1Chart'), {
+                type: 'doughnut',
+                data: {
+                    labels: data.politics.municipales_2020.tour_1.candidats,
+                    datasets: [{
+                        data: data.politics.municipales_2020.tour_1.scores,
+                        backgroundColor: data.politics.municipales_2020.tour_1.couleurs
+                    }]
+                },
+                options: { plugins: { legend: { position: 'bottom' } } }
             });
-            charts.siege = new Chart(document.getElementById('siegeChart'), {
-                type: 'doughnut', data: { labels: [], datasets: [{ data: [] }] }
+
+            // CHART 2: MUNICIPALES T2
+            new Chart(document.getElementById('t2Chart'), {
+                type: 'pie',
+                data: {
+                    labels: data.politics.municipales_2020.tour_2.candidats,
+                    datasets: [{
+                        data: data.politics.municipales_2020.tour_2.scores,
+                        backgroundColor: data.politics.municipales_2020.tour_2.couleurs
+                    }]
+                },
+                options: { plugins: { legend: { position: 'bottom' } } }
             });
+
+            // CHART 3: PRESIDENTIELLE (Barre horizontale pour comparer les forces)
+            new Chart(document.getElementById('presChart'), {
+                type: 'bar',
+                data: {
+                    labels: data.politics.presidentielle_2022_t1.candidats,
+                    datasets: [{
+                        label: '% des voix',
+                        data: data.politics.presidentielle_2022_t1.scores,
+                        backgroundColor: data.politics.presidentielle_2022_t1.couleurs,
+                        borderRadius: 5
+                    }]
+                },
+                options: { indexAxis: 'y', scales: { x: { beginAtZero: true, max: 60 } } }
+            });
+
+            // CHART 4: PARTICIPATION (Jauge)
+            const partT1 = data.politics.municipales_2020.tour_1.participation;
+            const partT2 = data.politics.municipales_2020.tour_2.participation;
+            new Chart(document.getElementById('abstentionChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Tour 1', 'Tour 2'],
+                    datasets: [{
+                        label: 'Participation %',
+                        data: [partT1, partT2],
+                        backgroundColor: ['#6c757d', '#198754']
+                    }]
+                },
+                options: { scales: { y: { beginAtZero: true, max: 100 } } }
+            });
+            
+            // CHART 5: DETTE HISTORIQUE
+            new Chart(document.getElementById('detteChart'), {
+                type: 'line',
+                data: {
+                    labels: data.history.annees_dette,
+                    datasets: [{
+                        label: 'Dette €/hab',
+                        data: data.history.dette,
+                        borderColor: '#e74c3c',
+                        tension: 0.3,
+                        fill: false
+                    }]
+                }
+            });
+
+        } catch (e) {
+            console.log(e);
+            alert("Erreur données.");
         }
-
-        function updateElectionChart(year) {
-            const d = allData.elections[year];
-            // Couleurs dynamiques selon le vainqueur
-            const colors = year === '2014' ? ['#0d6efd', '#dc3545'] : ['#dc3545', '#0d6efd']; // 2014 Droite, autres Gauche
-
-            charts.elec.data.labels = d.labels;
-            charts.elec.data.datasets[0].data = d.pourcentages;
-            charts.elec.data.datasets[0].backgroundColor = colors;
-            charts.elec.update();
-
-            charts.siege.data.labels = d.labels;
-            charts.siege.data.datasets[0].data = d.sieges;
-            charts.siege.data.datasets[0].backgroundColor = colors;
-            charts.siege.update();
-        }
-
-        loadDashboard();
-    </script>
+    }
+    init();
+</script>
 </body>
 </html>
