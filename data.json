@@ -1,129 +1,200 @@
 {
   "meta": {
-    "last_update": "10/12/2025"
+    "last_update": "10/12/2025 03:44"
   },
-  "kpi": {
+  "kpi_global": {
     "pop": "57 546",
-    "inscrits": "42 100",
-    "taux_abstention": "37.3 %",
-    "dette": "1 140 €",
+    "entreprises": "10 000",
+    "dette": "1140 €",
     "pauvrete": "42 %"
   },
-  "benchmark": [
-    {
-      "periode": "2020-2026",
-      "maire": "Joé BÉDIER",
-      "parti": "Union Gauche",
-      "dette_fin": "1 140 €",
-      "violence_index": "Moyen (Stable)",
-      "naissances_mandat": "3 450",
-      "deces_mandat": "1 280",
-      "style": "Social / Proximité",
-      "color": "#e74c3c"
+  "politique": {
+    "kpi_maire": {
+      "nom": "Joé BÉDIER",
+      "parti": "DVG (Gauche)",
+      "mandat": "2020 - 2026",
+      "score_victoire": "52.04 %"
     },
-    {
-      "periode": "2014-2020",
-      "maire": "J.P. VIRAPOULLÉ",
-      "parti": "UDI / Droite",
-      "dette_fin": "1 120 €",
-      "violence_index": "Élevé (2016-17)",
-      "naissances_mandat": "5 100",
-      "deces_mandat": "1 850",
-      "style": "Grands Projets",
-      "color": "#3498db"
-    },
-    {
-      "periode": "2008-2014",
-      "maire": "E. FRUTEAU",
-      "parti": "PCR",
-      "dette_fin": "1 410 €",
-      "violence_index": "Moyen",
-      "naissances_mandat": "5 300",
-      "deces_mandat": "1 700",
-      "style": "Éducation / Quartiers",
-      "color": "#c0392b"
-    }
-  ],
-  "electoral_science": {
-    "labels": [
-      "Mandat Fruteau (08-14)",
-      "Mandat Virapoullé (14-20)",
-      "Mandat Bédier (20-...)"
-    ],
-    "nouveaux_inscrits": [
-      4500,
-      3800,
-      2900
-    ],
-    "radiations_deces": [
-      2100,
-      2400,
-      1500
-    ],
-    "solde_renouvellement": [
-      "+2 400",
-      "+1 400",
-      "+1 400"
-    ],
-    "analyse": "Le corps électoral de St-André se renouvelle de 5% tous les 3 ans. Le socle historique de droite s'érode par la mortalité, remplacé par une jeunesse plus volatile."
-  },
-  "demographie_vitale": {
-    "annees": [
-      2010,
-      2012,
-      2014,
-      2016,
-      2018,
-      2020,
-      2022,
-      2023
-    ],
-    "naissances": [
-      920,
-      890,
-      850,
-      810,
-      780,
-      760,
-      740,
-      730
-    ],
-    "deces": [
-      280,
-      290,
-      310,
-      320,
-      340,
-      380,
-      410,
-      405
-    ]
-  },
-  "charts": {
-    "dette_history": {
+    "macro_tendances": {
       "annees": [
+        1983,
+        1989,
+        1995,
+        2001,
         2008,
         2014,
-        2020,
-        2023
+        2020
       ],
-      "data": [
-        1350,
-        1410,
-        1120,
-        1140
+      "bloc_droite": [
+        56.5,
+        58.2,
+        59.4,
+        52.1,
+        46.8,
+        51.6,
+        47.9
+      ],
+      "bloc_gauche": [
+        43.5,
+        41.8,
+        40.6,
+        47.9,
+        53.2,
+        48.4,
+        52.0
       ]
     },
-    "securite_compare": {
+    "details_scrutins": {
+      "2020": {
+        "candidats": [
+          "Joé BÉDIER (Union G.)",
+          "J.M. VIRAPOULLÉ (Droite)"
+        ],
+        "scores": [
+          52.04,
+          47.96
+        ],
+        "couleurs": [
+          "#e11d48",
+          "#2563eb"
+        ],
+        "analyse": "Basculement : Fusion des listes de gauche au 2nd tour."
+      },
+      "2014": {
+        "candidats": [
+          "J.P. VIRAPOULLÉ (UDI)",
+          "Joé BÉDIER (DVG)"
+        ],
+        "scores": [
+          51.58,
+          48.42
+        ],
+        "couleurs": [
+          "#2563eb",
+          "#e11d48"
+        ],
+        "analyse": "Reconquête de la droite (Virapoullé Père)."
+      },
+      "2008": {
+        "candidats": [
+          "Eric FRUTEAU (PCR)",
+          "J.P. VIRAPOULLÉ (UMP)"
+        ],
+        "scores": [
+          53.2,
+          46.8
+        ],
+        "couleurs": [
+          "#b91c1c",
+          "#2563eb"
+        ],
+        "analyse": "Fin de 30 ans de règne. Victoire historique PCR."
+      }
+    },
+    "benchmark_maires": [
+      {
+        "periode": "2020-...",
+        "nom": "J. BÉDIER",
+        "bord": "Gauche",
+        "dette_fin": "1140 €",
+        "style": "Social",
+        "color": "#e11d48"
+      },
+      {
+        "periode": "2014-2020",
+        "nom": "J.P. VIRAPOULLÉ",
+        "bord": "Droite",
+        "dette_fin": "1120 €",
+        "style": "Bâtisseur",
+        "color": "#2563eb"
+      },
+      {
+        "periode": "2008-2014",
+        "nom": "E. FRUTEAU",
+        "bord": "PCR",
+        "dette_fin": "1410 €",
+        "style": "Éducation",
+        "color": "#b91c1c"
+      }
+    ]
+  },
+  "social": {
+    "demographie_historique": {
       "annees": [
-        "Fruteau",
-        "Virapoullé",
-        "Bédier"
+        1968,
+        1975,
+        1982,
+        1990,
+        1999,
+        2009,
+        2014,
+        2020,
+        2022
       ],
-      "data": [
-        1950,
+      "population": [
+        22094,
+        25231,
+        30075,
+        35049,
+        43174,
+        53290,
+        55090,
+        57150,
+        57546
+      ]
+    },
+    "indicateurs_precarite": {
+      "taux_pauvrete": "42 %",
+      "allocataires_caf": "16 800",
+      "beneficiaires_rsa": "5 400",
+      "chomage_jeunes": "48 %",
+      "comparaison_region": [
+        42,
+        37
+      ]
+    },
+    "education": {
+      "illettrisme_jdc": "22.5 %",
+      "sans_diplome": "39 %"
+    }
+  },
+  "regalien": {
+    "securite_trend": {
+      "annees": [
+        2015,
+        2017,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023
+      ],
+      "faits": [
+        2300,
+        2250,
+        1980,
+        1900,
+        2050,
         2200,
-        2100
+        2150
+      ]
+    },
+    "finances_trend": {
+      "annees": [
+        2013,
+        2015,
+        2017,
+        2019,
+        2021,
+        2023
+      ],
+      "dette": [
+        1350,
+        1380,
+        1250,
+        1100,
+        1150,
+        1140
       ]
     }
   }
