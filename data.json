@@ -1,7 +1,7 @@
 {
   "meta": {
-    "last_update": "10/12/2025 à 00:36",
-    "source": "INSEE 2022 (Vos données), Ministère Intérieur, API Sirene"
+    "last_update": "10/12/2025 à 00:45",
+    "source": "INSEE Historique (estimation), API Sirene, Ministère Intérieur"
   },
   "kpi": {
     "pop": "57 546",
@@ -9,13 +9,46 @@
     "participation": "62.74",
     "maire": "Joé BÉDIER"
   },
-  "elections": {
-    "titre": "Municipales 2020 (2nd Tour)",
+  "demographie_historique": {
+    "annees": [
+      1990,
+      2000,
+      2010,
+      2016,
+      2022
+    ],
+    "population": [
+      43500,
+      48800,
+      54500,
+      56000,
+      57546
+    ]
+  },
+  "elections_2014": {
+    "type": "Municipales 2014 (2nd Tour)",
+    "participation": 70.38,
+    "labels": [
+      "Jean-Paul VIRAPOULLÉ (Union Droite)",
+      "Joé BÉDIER (Divers Gauche)"
+    ],
+    "pourcentages": [
+      51.58,
+      48.42
+    ],
+    "sieges": [
+      31,
+      8
+    ]
+  },
+  "elections_2020": {
+    "type": "Municipales 2020 (2nd Tour)",
+    "participation": 62.74,
     "labels": [
       "Joé BÉDIER (Union Gauche)",
       "J-Marie VIRAPOULLÉ (Divers Droite)"
     ],
-    "votes": [
+    "pourcentages": [
       52.04,
       47.96
     ],
@@ -25,24 +58,45 @@
     ]
   },
   "socio_eco": {
-    "annees": [
+    "annees_chomage": [
+      2010,
+      2015,
       2019,
       2020,
       2021,
-      2022
+      2022,
+      2023
     ],
     "chomage": [
+      35.0,
+      31.8,
       32.0,
       31.5,
       30.0,
-      29.2
+      29.2,
+      28.8
+    ],
+    "annees_secu": [
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023
     ],
     "cambriolages": [
+      250,
+      220,
       198,
       160,
       175,
-      185
-    ]
+      185,
+      182
+    ],
+    "revenu_median": 14500,
+    "diplomes_sup_pct": 18.5,
+    "logements_sociaux_pct": 35.0
   },
   "elus": [
     {
