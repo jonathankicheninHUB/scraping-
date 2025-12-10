@@ -28,10 +28,10 @@ jobs:
       - name: Run Scraper
         run: python update_data.py
 
-      - name: Commit and push changes
+   - name: Commit and push changes
         run: |
           git config --global user.name 'GitHub Action'
           git config --global user.email 'action@github.com'
           git add data.json
-          git commit -m "Auto-update data.json from API" || exit 0
+          git commit -m "Auto-update data.json" || exit 0
           git push
