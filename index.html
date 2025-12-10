@@ -2,290 +2,95 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>SAINT-ANDRÉ | INTELLIGENCE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <title>AUDIT SAINT-ANDRÉ | LIVE DATA</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
-        :root {
-            --bg-dark: #020617;       /* Noir bleuté profond */
-            --panel-bg: #0f172a;      /* Panneaux */
-            --border: #1e293b;        /* Bordures discrètes */
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent: #38bdf8;        /* Bleu Cyan (Info) */
-            --danger: #ef4444;        /* Rouge (Danger) */
-            --warning: #f59e0b;       /* Orange (Finance) */
-            --politics-l: #e11d48;    /* Rouge Gauche */
-            --politics-r: #2563eb;    /* Bleu Droite */
-        }
-
-        body { background-color: var(--bg-dark); color: var(--text-main); font-family: 'Inter', sans-serif; padding-bottom: 50px; }
-
-        .navbar { background: rgba(15, 23, 42, 0.95); border-bottom: 1px solid var(--border); backdrop-filter: blur(10px); }
-        .badge-live { font-family: 'JetBrains Mono'; font-size: 0.7rem; background: rgba(56, 189, 248, 0.1); color: var(--accent); border: 1px solid var(--accent); padding: 4px 8px; border-radius: 4px; box-shadow: 0 0 8px rgba(56, 189, 248, 0.2); }
-
-        .stat-card { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 6px; padding: 1.25rem; height: 100%; transition: transform 0.2s; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5); }
-        .stat-card:hover { border-color: var(--accent); }
-        
-        .stat-lbl { font-size: 0.7rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 1px; margin-bottom: 5px; }
-        .stat-val { font-size: 2rem; font-weight: 800; color: white; line-height: 1; font-family: 'Inter'; }
-        
-        /* Barres de couleur sémantique sur les cartes */
-        .border-l-pol { border-left: 3px solid var(--politics-l); }
-        .border-l-warn { border-left: 3px solid var(--warning); }
-        .border-l-danger { border-left: 3px solid var(--danger); }
-        .border-l-info { border-left: 3px solid var(--accent); }
-
-        .nav-pills .nav-link { color: var(--text-muted); font-weight: 600; background: rgba(255,255,255,0.05); margin-right: 10px; border: 1px solid transparent; text-transform: uppercase; font-size: 0.8rem; }
-        .nav-pills .nav-link.active { background: var(--accent); color: #020617; box-shadow: 0 0 15px rgba(56, 189, 248, 0.3); }
-
-        .table-dark-custom th { color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-        .table-dark-custom td { color: white; padding: 12px 5px; border-bottom: 1px solid var(--border); vertical-align: middle; font-size: 0.9rem; }
-        
-        .chart-container { position: relative; height: 260px; width: 100%; margin-top: 15px; }
-        #map { height: 350px; width: 100%; border-radius: 6px; border: 1px solid var(--border); filter: grayscale(20%) contrast(1.1); }
+        body { background: #0f172a; color: #f8fafc; font-family: sans-serif; padding: 20px; }
+        .card { background: #1e293b; border: 1px solid #334155; margin-bottom: 20px; }
+        .val { font-size: 2.5rem; font-weight: bold; color: white; }
+        .source { font-size: 0.7rem; color: #94a3b8; font-family: monospace; border-top: 1px solid #334155; padding-top: 5px; margin-top: 10px; display: block; }
+        .badge-live { background: #10b981; color: #022c22; padding: 5px 10px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; }
     </style>
 </head>
 <body>
 
-    <nav class="navbar fixed-top">
-        <div class="container-fluid px-4">
-            <span class="navbar-brand fw-bold"><i class="fas fa-layer-group text-accent me-2"></i>SAINT-ANDRÉ <span class="text-accent">DATA</span></span>
-            <div class="d-flex align-items-center gap-3">
-                <span class="text-muted small" id="last-update">Sync...</span>
-                <span class="badge-live">● LIVE</span>
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1><i class="fas fa-server me-2"></i>SAINT-ANDRÉ <span class="text-primary">AUDIT</span></h1>
+        <div><span class="badge-live">API CONNECTÉE</span> <small class="text-muted ms-2" id="last-update">...</small></div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card p-4">
+                <h6 class="text-uppercase text-muted">Démographie</h6>
+                <div class="val" id="pop">Chargement...</div>
+                <div class="source"><i class="fas fa-link"></i> <span id="src-pop">--</span></div>
             </div>
         </div>
-    </nav>
 
-    <div class="container-fluid px-4" style="margin-top: 80px;">
-        
-        <div class="row g-3 mb-4">
-            <div class="col-md-2"><div class="stat-card border-l-info"><div class="stat-lbl">Population</div><div class="stat-val" id="kpi-pop">--</div></div></div>
-            <div class="col-md-2"><div class="stat-card border-l-pol"><div class="stat-lbl">Maire</div><div class="stat-val h4 mb-0" id="kpi-maire">--</div><small style="color:var(--politics-l);" id="kpi-parti">--</small></div></div>
-            <div class="col-md-2"><div class="stat-card border-l-danger"><div class="stat-lbl">Pauvreté</div><div class="stat-val text-danger" id="kpi-pauvrete">--</div></div></div>
-            <div class="col-md-2"><div class="stat-card border-l-warn"><div class="stat-lbl">Dette / Hab</div><div class="stat-val text-warning" id="kpi-dette">--</div></div></div>
-            <div class="col-md-2"><div class="stat-card border-l-danger"><div class="stat-lbl">Sécurité</div><div class="stat-val h4 mb-0 text-danger" id="kpi-secu">--</div></div></div>
+        <div class="col-md-4">
+            <div class="card p-4">
+                <h6 class="text-uppercase text-muted">Tissu Économique</h6>
+                <div class="val text-warning" id="eco">Chargement...</div>
+                <div class="source"><i class="fas fa-link"></i> <span id="src-eco">--</span></div>
+            </div>
         </div>
 
-        <ul class="nav nav-pills mb-4" id="pills-tab" role="tablist">
-            <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-bench">⚖️ BENCHMARK MAIRES</button></li>
-            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-pol">🏛️ POLITIQUE & ÉROSION</button></li>
-            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-soc">❤️ SOCIAL & TERRITOIRE</button></li>
-        </ul>
-
-        <div class="tab-content">
-            
-            <div class="tab-pane fade show active" id="tab-bench">
-                <div class="row g-4">
-                    <div class="col-lg-12">
-                        <div class="stat-card">
-                            <h5 class="text-white mb-3"><i class="fas fa-balance-scale text-accent me-2"></i>Comparatif des Mandats (Performance & Héritage)</h5>
-                            <div class="table-responsive">
-                                <table class="table table-dark-custom mb-0">
-                                    <thead><tr><th>Période</th><th>Maire</th><th>Parti</th><th>Dette Fin</th><th>Violence</th><th>Naissances (Dyn.)</th><th>Décès (Pertes)</th><th>Style</th></tr></thead>
-                                    <tbody id="bench-body"></tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="stat-card">
-                            <h5 class="text-white mb-3">Courbes Vitales (Naissances vs Décès)</h5>
-                            <p class="text-muted small">Croisement = Vieillissement du corps électoral.</p>
-                            <div class="chart-container"><canvas id="lifeChart"></canvas></div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="stat-card">
-                            <h5 class="text-white mb-3">Tendance Sécurité (2015-2023)</h5>
-                            <div class="chart-container"><canvas id="secuChart"></canvas></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tab-pane fade" id="tab-pol">
-                <div class="row g-4">
-                    <div class="col-lg-8">
-                        <div class="stat-card mb-4">
-                            <h5 class="text-white mb-4">Analyse Érosion & Renouvellement</h5>
-                            <p class="text-muted small">Nouveaux inscrits vs Radiations (Décès/Départs) par mandat.</p>
-                            <div class="chart-container"><canvas id="erosionChart"></canvas></div>
-                        </div>
-                        <div class="stat-card">
-                            <h5 class="text-white mb-3">Guerre des Blocs (1983-2020)</h5>
-                            <div class="chart-container"><canvas id="macroChart"></canvas></div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="stat-card h-100">
-                            <h5 class="text-white mb-3">Zoom Électoral</h5>
-                            <select class="form-select bg-dark text-white border-secondary mb-3" onchange="updateElec(this.value)">
-                                <option value="2020">Municipales 2020 (Victoire Bédier)</option>
-                                <option value="2014">Municipales 2014 (Victoire Virapoullé)</option>
-                            </select>
-                            <div class="chart-container" style="height:220px"><canvas id="elecChart"></canvas></div>
-                            <div class="mt-4 p-3 rounded" style="background:rgba(255,255,255,0.05); border-left:3px solid var(--accent);">
-                                <small class="text-accent text-uppercase fw-bold">Analyse</small>
-                                <p class="text-sm m-0 mt-1 text-muted" id="elec-analyse">--</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tab-pane fade" id="tab-soc">
-                <div class="row g-4">
-                    <div class="col-lg-8">
-                        <div class="stat-card">
-                            <h5 class="text-white mb-3">Cartographie Stratégique (QPV)</h5>
-                            <div id="map"></div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="stat-card h-100">
-                            <h5 class="text-white mb-4">Indicateurs Sociaux</h5>
-                            <ul class="list-group list-group-flush bg-transparent">
-                                <li class="list-group-item bg-transparent text-white d-flex justify-content-between border-secondary">
-                                    <span>Chômage Jeunes</span> <span class="text-danger fw-bold">48%</span>
-                                </li>
-                                <li class="list-group-item bg-transparent text-white d-flex justify-content-between border-secondary">
-                                    <span>Illettrisme (JDC)</span> <span class="text-warning fw-bold">22%</span>
-                                </li>
-                                <li class="list-group-item bg-transparent text-white d-flex justify-content-between border-secondary">
-                                    <span>Alloc. CAF</span> <span class="fw-bold">16 800</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+        <div class="col-md-4">
+            <div class="card p-4">
+                <h6 class="text-uppercase text-muted">Politique de la Ville</h6>
+                <div class="val text-danger" id="qpv" style="font-size: 1.5rem;">--</div>
+                <div class="source"><i class="fas fa-link"></i> <span id="src-qpv">--</span></div>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card p-4">
+                <h5 class="border-bottom border-secondary pb-2 mb-3">Archives Électorales (Données Certifiées Ministère)</h5>
+                <table class="table table-dark table-striped">
+                    <thead><tr><th>Année</th><th>Vainqueur</th><th>Score 2nd Tour</th></tr></thead>
+                    <tbody id="archives-body"></tbody>
+                </table>
+                <small class="text-muted">Ces données proviennent des archives numérisées et ne sont pas mises à jour en temps réel.</small>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // CHART JS DARK CONFIG
-        Chart.defaults.color = '#94a3b8';
-        Chart.defaults.borderColor = '#334155';
-        Chart.defaults.font.family = "'Inter', sans-serif";
+        fetch('data.json')
+            .then(r => r.json())
+            .then(data => {
+                // Meta
+                document.getElementById('last-update').innerText = data.meta.last_update;
 
-        let globalData, elecChart;
+                // Pop
+                document.getElementById('pop').innerText = data.kpi.population.valeur;
+                document.getElementById('src-pop').innerText = data.kpi.population.source;
 
-        async function init() {
-            try {
-                const r = await fetch('data.json');
-                if(!r.ok) throw new Error("JSON Error");
-                globalData = await r.json();
+                // Eco
+                document.getElementById('eco').innerText = data.kpi.economie.valeur;
+                document.getElementById('src-eco').innerText = data.kpi.economie.source;
 
-                // KPI
-                document.getElementById('last-update').innerText = globalData.meta.last_update;
-                document.getElementById('kpi-pop').innerText = globalData.kpi.pop;
-                document.getElementById('kpi-maire').innerText = globalData.kpi.maire.split(' ')[1];
-                document.getElementById('kpi-parti').innerText = globalData.kpi.parti;
-                document.getElementById('kpi-pauvrete').innerText = globalData.kpi.pauvrete;
-                document.getElementById('kpi-dette').innerText = globalData.kpi.dette;
-                document.getElementById('kpi-secu').innerText = globalData.kpi.securite;
+                // QPV
+                document.getElementById('qpv').innerText = data.kpi.social.qpv;
+                document.getElementById('src-qpv').innerText = data.kpi.social.source;
 
-                // BENCHMARK TABLE
-                const tb = document.getElementById('bench-body');
-                tb.innerHTML = '';
-                globalData.benchmark.forEach(b => {
-                    tb.innerHTML += `
-                        <tr>
-                            <td class="text-white fw-bold">${b.periode}</td>
-                            <td style="color:${b.color}">${b.maire}</td>
-                            <td><span class="badge" style="background:${b.color}20; color:${b.color}; border:1px solid ${b.color}">${b.bord}</span></td>
-                            <td class="text-warning font-monospace">${b.dette_fin}</td>
-                            <td>${b.violence}</td>
-                            <td class="text-success">+${b.naissances}</td>
-                            <td class="text-danger">-${b.deces}</td>
-                            <td class="text-muted small">${b.style}</td>
-                        </tr>`;
-                });
-
-                // CHART 1: VIE (Naissances/Deces)
-                new Chart(document.getElementById('lifeChart'), {
-                    type: 'line',
-                    data: {
-                        labels: globalData.charts.demographie_vitale.annees,
-                        datasets: [
-                            { label: 'Naissances', data: globalData.charts.demographie_vitale.naissances, borderColor: '#38bdf8', borderWidth: 3, tension: 0.4 },
-                            { label: 'Décès', data: globalData.charts.demographie_vitale.deces, borderColor: '#ef4444', borderWidth: 3, tension: 0.4 }
-                        ]
-                    },
-                    options: { maintainAspectRatio: false }
-                });
-
-                // CHART 2: SÉCURITÉ (Barres colorées)
-                const ctxSec = document.getElementById('secuChart').getContext('2d');
-                const gradSec = ctxSec.createLinearGradient(0,0,0,400); gradSec.addColorStop(0, '#3b82f6'); gradSec.addColorStop(1, '#0f172a');
-                new Chart(ctxSec, {
-                    type: 'bar',
-                    data: {
-                        labels: globalData.charts.securite.annees,
-                        datasets: [{ label: 'Faits Constatés', data: globalData.charts.securite.data, backgroundColor: gradSec, borderRadius: 4 }]
-                    },
-                    options: { maintainAspectRatio: false, scales:{y:{min:1500}} }
-                });
-
-                // CHART 3: ÉROSION
-                new Chart(document.getElementById('erosionChart'), {
-                    type: 'bar',
-                    data: {
-                        labels: globalData.science.labels,
-                        datasets: [
-                            { label: 'Nouveaux', data: globalData.science.nouveaux, backgroundColor: '#10b981' },
-                            { label: 'Départs/Décès', data: globalData.science.partants, backgroundColor: '#ef4444' }
-                        ]
-                    },
-                    options: { scales: { x: { stacked: true }, y: { stacked: true } }, maintainAspectRatio: false }
-                });
-
-                // CHART 4: MACRO POLITIQUE
-                new Chart(document.getElementById('macroChart'), {
-                    type: 'line',
-                    data: {
-                        labels: globalData.charts.politique_macro.annees,
-                        datasets: [
-                            { label: 'Droite', data: globalData.charts.politique_macro.droite, borderColor: '#3b82f6', tension:0.4 },
-                            { label: 'Gauche', data: globalData.charts.politique_macro.gauche, borderColor: '#e11d48', tension:0.4 }
-                        ]
-                    },
-                    options: { maintainAspectRatio: false }
-                });
-
-                // ELEC DETAIL
-                const ctxE = document.getElementById('elecChart');
-                elecChart = new Chart(ctxE, { type: 'doughnut', data: { labels:[], datasets:[{data:[]}] }, options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels:{color:'white'} } }, cutout: '70%' } });
-                updateElec('2020');
-
-                // MAP
-                const map = L.map('map', {zoomControl: false}).setView([-20.9606, 55.6495], 13);
-                L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {attribution: '© CartoDB'}).addTo(map);
-                L.circleMarker([-20.942, 55.665], {color: '#ef4444', radius: 8}).addTo(map).bindPopup("<b>Fayard</b><br>Zone Tension");
-                L.circleMarker([-20.9606, 55.6495], {color: '#3b82f6', radius: 6}).addTo(map).bindPopup("<b>Mairie</b>");
-
-            } catch (e) { console.error(e); }
-        }
-
-        function updateElec(year) {
-            const d = globalData.charts.elections[year];
-            elecChart.data.labels = d.labels;
-            elecChart.data.datasets[0].data = d.data;
-            elecChart.data.datasets[0].backgroundColor = d.colors;
-            elecChart.data.datasets[0].borderWidth = 0;
-            elecChart.update();
-            document.getElementById('elec-analyse').innerHTML = d.analyse;
-        }
-
-        init();
+                // Archives
+                const tb = document.getElementById('archives-body');
+                const h = data.archives.politique.data;
+                // Simple affichage statique pour l'exemple
+                tb.innerHTML = `
+                    <tr><td>2020</td><td>${h['2020'].vainqueur}</td><td class="fw-bold">${h['2020'].score}%</td></tr>
+                    <tr><td>2014</td><td>${h['2014'].vainqueur}</td><td class="fw-bold">${h['2014'].score}%</td></tr>
+                    <tr><td>2008</td><td>${h['2008'].vainqueur}</td><td class="fw-bold">${h['2008'].score}%</td></tr>
+                `;
+            })
+            .catch(e => {
+                document.body.innerHTML = "<h3 style='color:red; text-align:center; margin-top:50px'>Erreur de chargement des données. Vérifiez l'action GitHub.</h3>";
+            });
     </script>
 </body>
 </html>
