@@ -2,14 +2,14 @@ name: Update Dashboard Data
 
 on:
   schedule:
-    - cron: '0 6 * * 1' # Tous les lundis à 6h
-  workflow_dispatch: # Pour lancer manuellement
+    - cron: '0 6 * * 1' # Se lance tous les lundis à 6h du matin UTC
+  workflow_dispatch: # Permet de lancer manuellement
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write # Donne le droit au robot d'écrire le fichier json
 
     steps:
       - name: Checkout code
@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pandas requests beautifulsoup4
+          pip install pandas requests # Seules deux libs sont nécessaires pour cette version
 
       - name: Run Scraper
         run: python update_data.py
@@ -33,5 +33,5 @@ jobs:
           git config --global user.name 'GitHub Action'
           git config --global user.email 'action@github.com'
           git add data.json
-          git commit -m "Auto-update data.json" || exit 0
+          git commit -m "Auto-update data.json from API" || exit 0
           git push
