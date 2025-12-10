@@ -2,7 +2,9 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>SAINT-ANDRÉ | STRATEGIC DATA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAINT-ANDRÉ | WAR ROOM</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -10,220 +12,394 @@
     
     <style>
         :root {
-            --bg: #0f172a; --card: #1e293b; --text: #e2e8f0; 
-            --accent: #38bdf8; --danger: #ef4444; --success: #10b981; --warning: #f59e0b;
+            --bg-dark: #0f172a;
+            --panel-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            
+            /* COULEURS SÉMANTIQUES */
+            --info: #38bdf8;      /* Bleu Cyan (Neutre/Info) */
+            --danger: #ef4444;    /* Rouge (Pauvreté/Alerte) */
+            --warning: #f59e0b;   /* Orange (Dette/Attention) */
+            --success: #10b981;   /* Vert (Positif) */
+            --politics-l: #e11d48; /* Rouge Gauche */
+            --politics-r: #2563eb; /* Bleu Droite */
         }
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; padding-bottom: 50px; }
+
+        body { 
+            background-color: var(--bg-dark); 
+            color: var(--text-main); 
+            font-family: 'Inter', sans-serif; 
+            padding-bottom: 50px;
+        }
+
+        /* HEADER */
+        .navbar {
+            background: rgba(15, 23, 42, 0.95);
+            border-bottom: 1px solid #334155;
+            backdrop-filter: blur(10px);
+        }
+        .navbar-brand { font-weight: 800; letter-spacing: -0.5px; color: white !important; }
+        .badge-live { 
+            font-family: 'JetBrains Mono'; font-size: 0.7rem; 
+            background: rgba(56, 189, 248, 0.1); color: var(--info); 
+            border: 1px solid var(--info); padding: 4px 8px; border-radius: 4px;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+        }
+
+        /* KPI CARDS */
+        .kpi-card {
+            background: var(--panel-bg);
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 1.5rem;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        /* Bordure colorée à gauche selon le contexte */
+        .kpi-card.neutral { border-left: 4px solid var(--info); }
+        .kpi-card.alert { border-left: 4px solid var(--danger); }
+        .kpi-card.warn { border-left: 4px solid var(--warning); }
+        .kpi-card.pol { border-left: 4px solid var(--politics-l); } /* Par défaut maire actuel */
+
+        .kpi-label { font-size: 0.7rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; margin-bottom: 5px; letter-spacing: 1px; }
+        .kpi-value { font-size: 2.2rem; font-weight: 800; line-height: 1; color: white; }
+        .kpi-sub { font-size: 0.8rem; margin-top: 5px; opacity: 0.8; font-family: 'JetBrains Mono'; }
+
+        /* CHARTS & TABS */
+        .chart-container { position: relative; height: 280px; width: 100%; margin-top:15px; }
+        #map { height: 350px; width: 100%; border-radius: 8px; filter: grayscale(20%) contrast(1.1); border: 1px solid #334155; }
+
+        .nav-pills .nav-link { 
+            color: var(--text-muted); 
+            font-weight: 600; 
+            background: rgba(255,255,255,0.05); 
+            margin-right: 10px; 
+            border: 1px solid transparent;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+        .nav-pills .nav-link.active { 
+            background: var(--info); 
+            color: #0f172a; 
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+        }
+
+        /* TABLES */
+        .table-dark-custom { --bs-table-bg: transparent; color: var(--text-muted); font-size: 0.9rem; }
+        .table-dark-custom th { border-bottom: 2px solid #334155; color: white; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; }
+        .table-dark-custom td { border-bottom: 1px solid #334155; padding: 15px 10px; vertical-align: middle; }
         
-        .navbar { background: rgba(15,23,42,0.95); border-bottom: 1px solid #334155; padding: 1rem; position: sticky; top: 0; z-index: 999; }
-        .stat-card { background: var(--card); border: 1px solid #334155; border-radius: 8px; padding: 1.5rem; height: 100%; transition: transform 0.2s; }
-        .stat-card:hover { border-color: var(--accent); transform: translateY(-3px); }
-        .stat-val { font-size: 2rem; font-weight: 800; color: white; line-height: 1; font-family: 'Inter'; }
-        .stat-lbl { font-size: 0.7rem; text-transform: uppercase; color: #94a3b8; font-weight: 700; margin-bottom: 5px; }
-        
-        .nav-pills .nav-link { color: #94a3b8; background: rgba(255,255,255,0.05); margin-right: 10px; border-radius: 6px; }
-        .nav-pills .nav-link.active { background: var(--accent); color: #0f172a; font-weight: 800; }
-        
-        .custom-table th { color: #94a3b8; font-size: 0.75rem; text-transform: uppercase; border-bottom: 1px solid #334155; padding: 10px; }
-        .custom-table td { color: white; padding: 15px 10px; border-bottom: 1px solid #334155; vertical-align: middle; }
-        
-        .chart-box { height: 300px; width: 100%; }
-        
-        /* Badges Maires */
-        .badge-maire { padding: 5px 10px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; display: inline-block; width: 120px; text-align: center; }
+        .badge-style { padding: 5px 10px; border-radius: 4px; font-weight: bold; font-size: 0.75rem; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
-    <nav class="navbar">
+    <nav class="navbar fixed-top">
         <div class="container-fluid px-4">
-            <span class="navbar-brand text-white fw-bold"><i class="fas fa-chart-network text-accent me-2"></i>SAINT-ANDRÉ <span class="text-accent">STRATÉGIE</span></span>
-            <div class="small font-monospace text-success"><i class="fas fa-circle me-1"></i> SYSTÈME ACTIF</div>
+            <span class="navbar-brand"><i class="fas fa-terminal text-info me-2"></i>SAINT-ANDRÉ <span class="text-info">DATA</span></span>
+            <div class="d-flex align-items-center gap-3">
+                <span class="text-muted small" id="last-update">Sync...</span>
+                <span class="badge-live">● SYSTÈME EN LIGNE</span>
+            </div>
         </div>
     </nav>
 
-    <div class="container-fluid px-4 mt-4">
+    <div class="container-fluid px-4" style="margin-top: 80px;">
         
         <div class="row g-4 mb-4">
-            <div class="col-md-2"><div class="stat-card"><div class="stat-lbl">Corps Électoral</div><div class="stat-val" id="kpi-inscrits">--</div></div></div>
-            <div class="col-md-2"><div class="stat-card"><div class="stat-lbl">Population</div><div class="stat-val" id="kpi-pop">--</div></div></div>
-            <div class="col-md-2"><div class="stat-card"><div class="stat-lbl">Abstention (2020)</div><div class="stat-val text-warning" id="kpi-abs">--</div></div></div>
-            <div class="col-md-2"><div class="stat-card"><div class="stat-lbl">Pauvreté</div><div class="stat-val text-danger" id="kpi-pauv">--</div></div></div>
-            <div class="col-md-2"><div class="stat-card"><div class="stat-lbl">Dette Actuelle</div><div class="stat-val" id="kpi-dette">--</div></div></div>
-            <div class="col-md-2"><div class="stat-card"><div class="stat-lbl">Tendance Sécu</div><div class="stat-val h4 text-warning">Stable</div></div></div>
+            <div class="col-md-2">
+                <div class="kpi-card neutral">
+                    <div class="kpi-label">Population</div>
+                    <div class="kpi-value" id="kpi-pop">--</div>
+                    <div class="kpi-sub text-info"><i class="fas fa-arrow-up"></i> Croissance</div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="kpi-card pol">
+                    <div class="kpi-label">Maire Actuel</div>
+                    <div class="kpi-value h4 mb-0" id="kpi-maire">--</div>
+                    <div class="kpi-sub" style="color:var(--politics-l);" id="kpi-parti">--</div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="kpi-card alert">
+                    <div class="kpi-label">Pauvreté</div>
+                    <div class="kpi-value" style="color:var(--danger);" id="kpi-pauvrete">--</div>
+                    <div class="kpi-sub">Zone Critique</div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="kpi-card warn">
+                    <div class="kpi-label">Dette / Hab</div>
+                    <div class="kpi-value" style="color:var(--warning);" id="kpi-dette">--</div>
+                    <div class="kpi-sub">Point de vigilance</div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="kpi-card neutral">
+                    <div class="kpi-label">Entreprises</div>
+                    <div class="kpi-value h4 mb-0" id="kpi-eco">--</div>
+                    <div class="kpi-sub">Tissu actif</div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="kpi-card warn">
+                    <div class="kpi-label">Sécurité</div>
+                    <div class="kpi-value h4 mb-0 text-warning">Moyen</div>
+                    <div class="kpi-sub">Stable (2023)</div>
+                </div>
+            </div>
         </div>
 
         <ul class="nav nav-pills mb-4" id="pills-tab" role="tablist">
-            <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-science">🔬 LABO ÉLECTORAL</button></li>
-            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-bench">⚖️ BENCHMARK MAIRES</button></li>
-            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-demo">👶 DÉMOGRAPHIE & VIE</button></li>
+            <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-pol">🏛️ POLITIQUE</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-soc">❤️ SOCIAL & TERRITOIRE</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-hist">📈 ARCHIVES</button></li>
         </ul>
 
         <div class="tab-content">
             
-            <div class="tab-pane fade show active" id="tab-science">
+            <div class="tab-pane fade show active" id="tab-pol">
                 <div class="row g-4">
                     <div class="col-lg-8">
-                        <div class="stat-card">
-                            <h5 class="text-white mb-3 fw-bold"><i class="fas fa-users-cog text-accent me-2"></i>Renouvellement du Corps Électoral (L'Érosion)</h5>
-                            <p class="text-muted small">Ce graphique montre le remplacement des générations. <span class="text-success">Vert = Nouveaux inscrits (18 ans + arrivées)</span> vs <span class="text-danger">Rouge = Radiations (Décès + Départs)</span>.</p>
-                            <div class="chart-box"><canvas id="erosionChart"></canvas></div>
-                            <div class="alert alert-dark border-secondary mt-3 text-muted small">
-                                <i class="fas fa-lightbulb text-warning me-2"></i> <strong>Analyse :</strong> <span id="analyse-txt">--</span>
+                        <div class="kpi-card mb-4">
+                            <h5 class="text-white mb-4">Guerre des Blocs (1983 - 2020)</h5>
+                            <div class="chart-container"><canvas id="macroChart"></canvas></div>
+                        </div>
+                        <div class="kpi-card">
+                            <h5 class="text-white mb-3">Benchmark Historique des Maires</h5>
+                            <div class="table-responsive">
+                                <table class="table table-dark-custom mb-0">
+                                    <thead><tr><th>Période</th><th>Maire</th><th>Parti</th><th>Dette Fin</th><th>Style</th></tr></thead>
+                                    <tbody id="bench-body"></tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-4">
-                        <div class="stat-card h-100">
-                            <h5 class="text-white mb-4">Vitalité Électorale</h5>
-                            <div class="d-flex justify-content-between mb-3 border-bottom border-secondary pb-3">
-                                <span>Flux Nouveaux Électeurs</span>
-                                <span class="text-success fw-bold">+5% / 3 ans</span>
-                            </div>
-                            <div class="d-flex justify-content-between mb-3 border-bottom border-secondary pb-3">
-                                <span>Impact Mortalité (Est.)</span>
-                                <span class="text-danger fw-bold">-350 voix / an</span>
-                            </div>
-                            <div class="mt-4 p-3 bg-opacity-10 bg-primary rounded border border-primary">
-                                <small class="text-primary text-uppercase fw-bold">Stratégie</small>
-                                <p class="small m-0 text-light mt-1">Le socle historique s'érode naturellement. La victoire se joue sur la captation des 18-25 ans et des néo-arrivants.</p>
+                        <div class="kpi-card h-100">
+                            <h5 class="text-white mb-3">Zoom Électoral</h5>
+                            <select class="form-select bg-dark text-white border-secondary mb-3" onchange="updateElec(this.value)">
+                                <option value="2020">2020 - Victoire Bédier</option>
+                                <option value="2014">2014 - Victoire Virapoullé</option>
+                                <option value="2008">2008 - Victoire Fruteau</option>
+                            </select>
+                            <div class="chart-container" style="height:250px"><canvas id="elecChart"></canvas></div>
+                            <div class="mt-4 p-3 rounded" style="background:rgba(255,255,255,0.05); border-left:3px solid var(--info);">
+                                <small class="text-info text-uppercase fw-bold">Analyse</small>
+                                <p class="text-sm m-0 mt-1 text-muted" id="elec-analyse">--</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="tab-pane fade" id="tab-bench">
-                <div class="stat-card mb-4">
-                    <h5 class="text-white mb-3">Comparatif des Mandats (Performance)</h5>
-                    <div class="table-responsive">
-                        <table class="table custom-table mb-0">
-                            <thead>
-                                <tr>
-                                    <th>Période</th>
-                                    <th>Maire</th>
-                                    <th>Dette Fin Mandat</th>
-                                    <th>Indice Violence</th>
-                                    <th>Naissances (Dyn.)</th>
-                                    <th>Décès (Perte)</th>
-                                </tr>
-                            </thead>
-                            <tbody id="bench-body"></tbody>
-                        </table>
-                    </div>
-                </div>
+            <div class="tab-pane fade" id="tab-soc">
                 <div class="row g-4">
-                    <div class="col-md-6">
-                        <div class="stat-card">
-                            <h5 class="text-white mb-3">Évolution Dette par Maire</h5>
-                            <div class="chart-box" style="height:250px"><canvas id="detteChart"></canvas></div>
+                    <div class="col-lg-4">
+                        <div class="kpi-card h-100">
+                            <h5 class="text-white mb-4">Indicateurs de Précarité</h5>
+                            
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-between mb-1 small text-muted"><span>Chômage Jeunes (15-24 ans)</span> <span class="fw-bold" style="color:var(--danger);" id="soc-chomage">--</span></div>
+                                <div class="progress" style="height:8px; background:#0f172a;"><div class="progress-bar" style="width:48%; background:var(--danger);"></div></div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-between mb-1 small text-muted"><span>Illettrisme (JDC)</span> <span class="fw-bold" style="color:var(--warning);" id="soc-illettrisme">--</span></div>
+                                <div class="progress" style="height:8px; background:#0f172a;"><div class="progress-bar" style="width:22%; background:var(--warning);"></div></div>
+                            </div>
+
+                            <hr class="border-secondary my-4">
+                            
+                            <div class="row text-center">
+                                <div class="col-6 border-end border-secondary">
+                                    <div class="h3 text-white mb-0" id="soc-caf">--</div>
+                                    <small class="text-muted text-uppercase">Alloc. CAF</small>
+                                </div>
+                                <div class="col-6">
+                                    <div class="h3 mb-0" style="color:var(--danger);" id="soc-rsa">--</div>
+                                    <small class="text-muted text-uppercase">RSA</small>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="stat-card">
-                            <h5 class="text-white mb-3">Moyenne Violence / Mandat</h5>
-                            <div class="chart-box" style="height:250px"><canvas id="violenceChart"></canvas></div>
+                    <div class="col-lg-8">
+                        <div class="kpi-card mb-4">
+                            <h5 class="text-white mb-3">Cartographie des Zones (QPV)</h5>
+                            <div id="map"></div>
+                        </div>
+                        <div class="kpi-card">
+                            <h5 class="text-white mb-3">Courbe de Sécurité (Faits Constatés)</h5>
+                            <div class="chart-container" style="height:250px"><canvas id="secuChart"></canvas></div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="tab-pane fade" id="tab-demo">
-                <div class="stat-card">
-                    <h5 class="text-white mb-3">Courbes de Vie (Naissances vs Décès)</h5>
-                    <p class="text-muted small">Croisement des courbes = Vieillissement de la population électorale.</p>
-                    <div class="chart-box" style="height:400px"><canvas id="lifeChart"></canvas></div>
+            <div class="tab-pane fade" id="tab-hist">
+                <div class="row g-4">
+                    <div class="col-lg-8">
+                        <div class="kpi-card">
+                            <h5 class="text-white mb-3">Trajectoire Démographique (1968-2022)</h5>
+                            <div class="chart-container"><canvas id="demoChart"></canvas></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="kpi-card">
+                            <h5 class="text-white mb-3">Historique Dette</h5>
+                            <div class="chart-container"><canvas id="detteChart"></canvas></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+        // CONFIGURATION CHARTJS "PRO"
         Chart.defaults.color = '#94a3b8';
-        Chart.defaults.borderColor = 'rgba(148, 163, 184, 0.1)';
+        Chart.defaults.borderColor = '#334155';
         Chart.defaults.font.family = "'Inter', sans-serif";
+
+        let globalData, elecChart;
 
         async function init() {
             try {
+                // Gestion des données manquantes
                 const r = await fetch('data.json');
                 if(!r.ok) throw new Error("JSON Error");
-                const data = await r.json();
+                globalData = await r.json();
 
-                // KPI
-                document.getElementById('kpi-inscrits').innerText = data.kpi.inscrits;
-                document.getElementById('kpi-pop').innerText = data.kpi.pop;
-                document.getElementById('kpi-abs').innerText = data.kpi.taux_abstention;
-                document.getElementById('kpi-pauv').innerText = data.kpi.pauvrete;
-                document.getElementById('kpi-dette').innerText = data.kpi.dette;
+                // 1. KPI
+                document.getElementById('last-update').innerText = globalData.meta.last_update;
+                document.getElementById('kpi-pop').innerText = globalData.kpi.pop;
+                document.getElementById('kpi-maire').innerText = globalData.kpi.maire.split(' ')[1];
+                document.getElementById('kpi-parti').innerText = globalData.kpi.parti;
+                document.getElementById('kpi-pauvrete').innerText = globalData.kpi.pauvrete;
+                document.getElementById('kpi-dette').innerText = globalData.kpi.dette;
+                document.getElementById('kpi-eco').innerText = globalData.kpi.entreprises;
 
-                // ANALYSE TEXTE
-                document.getElementById('analyse-txt').innerText = data.electoral_science.analyse;
+                // 2. SOCIAL
+                document.getElementById('soc-chomage').innerText = globalData.social.chomage;
+                document.getElementById('soc-illettrisme').innerText = globalData.social.illettrisme;
+                document.getElementById('soc-caf').innerText = globalData.social.caf;
+                document.getElementById('soc-rsa').innerText = globalData.social.rsa;
 
-                // TABLEAU BENCHMARK
-                const tb = document.getElementById('bench-body'); tb.innerHTML = '';
-                data.benchmark.forEach(b => {
+                // 3. TABLEAU BENCHMARK (Avec couleurs correctes)
+                const tb = document.getElementById('bench-body');
+                tb.innerHTML = '';
+                globalData.benchmark.forEach(b => {
                     tb.innerHTML += `
                         <tr>
-                            <td class="fw-bold text-white">${b.periode}</td>
-                            <td><span class="badge-maire" style="background:${b.color}">${b.maire}</span></td>
-                            <td class="text-warning font-monospace">${b.dette_fin}</td>
-                            <td>${b.violence_index}</td>
-                            <td class="text-success">+${b.naissances_mandat}</td>
-                            <td class="text-danger">-${b.deces_mandat}</td>
+                            <td class="text-white fw-bold">${b.periode}</td>
+                            <td style="color:${b.color}">${b.maire}</td>
+                            <td><span class="badge-style" style="background:${b.color}20; color:${b.color}; border:1px solid ${b.color}">${b.parti}</span></td>
+                            <td class="text-warning font-monospace">${b.dette}</td>
+                            <td class="text-muted small">${b.style}</td>
                         </tr>`;
                 });
 
-                // 1. CHART ÉROSION (Stacked Bar)
-                new Chart(document.getElementById('erosionChart'), {
-                    type: 'bar',
-                    data: {
-                        labels: data.electoral_science.labels,
-                        datasets: [
-                            { label: 'Nouveaux Inscrits (18 ans + Arrivées)', data: data.electoral_science.nouveaux_inscrits, backgroundColor: '#10b981' },
-                            { label: 'Pertes (Décès + Départs)', data: data.electoral_science.radiations_deces, backgroundColor: '#ef4444' }
-                        ]
-                    },
-                    options: { scales: { x: { stacked: true }, y: { stacked: true } }, maintainAspectRatio: false }
-                });
-
-                // 2. CHART VIE (Naissances/Deces)
-                new Chart(document.getElementById('lifeChart'), {
+                // 4. CHART MACRO (Courbes lissées et remplies)
+                new Chart(document.getElementById('macroChart'), {
                     type: 'line',
                     data: {
-                        labels: data.demographie_vitale.annees,
+                        labels: globalData.charts.politique_macro.annees,
                         datasets: [
-                            { label: 'Naissances', data: data.demographie_vitale.naissances, borderColor: '#38bdf8', tension: 0.4, borderWidth: 3 },
-                            { label: 'Décès', data: data.demographie_vitale.deces, borderColor: '#ef4444', tension: 0.4, borderWidth: 3 }
+                            { label: 'Bloc Droite', data: globalData.charts.politique_macro.droite, borderColor: '#3b82f6', tension: 0.4, borderWidth: 3 },
+                            { label: 'Bloc Gauche', data: globalData.charts.politique_macro.gauche, borderColor: '#e11d48', tension: 0.4, borderWidth: 3 }
                         ]
+                    },
+                    options: { maintainAspectRatio: false, scales: { y: { min: 30 } }, plugins: { legend: { labels: { color: '#e2e8f0' } } } }
+                });
+
+                // 5. CHART SECU (Couleur Visible + Dégradé)
+                const ctxSecu = document.getElementById('secuChart').getContext('2d');
+                const gradientSecu = ctxSecu.createLinearGradient(0, 0, 0, 400);
+                gradientSecu.addColorStop(0, '#3b82f6'); // Bleu vif en haut
+                gradientSecu.addColorStop(1, '#0f172a'); // Foncé en bas
+
+                new Chart(ctxSecu, {
+                    type: 'bar',
+                    data: {
+                        labels: globalData.charts.securite.annees,
+                        datasets: [{ 
+                            label: 'Faits Constatés', 
+                            data: globalData.charts.securite.data, 
+                            backgroundColor: gradientSecu,
+                            borderRadius: 4,
+                            borderWidth: 0
+                        }]
+                    },
+                    options: { maintainAspectRatio: false, scales: { y: { beginAtZero: false, min: 1500 } } }
+                });
+
+                // 6. CHART DEMO (Area Chart)
+                const ctxDemo = document.getElementById('demoChart').getContext('2d');
+                const gradientDemo = ctxDemo.createLinearGradient(0, 0, 0, 400);
+                gradientDemo.addColorStop(0, 'rgba(56, 189, 248, 0.5)'); 
+                gradientDemo.addColorStop(1, 'rgba(56, 189, 248, 0)');
+
+                new Chart(ctxDemo, {
+                    type: 'line',
+                    data: {
+                        labels: globalData.charts.demographie.annees,
+                        datasets: [{ 
+                            label: 'Population', 
+                            data: globalData.charts.demographie.data, 
+                            borderColor: '#38bdf8', 
+                            backgroundColor: gradientDemo, 
+                            fill: true,
+                            tension: 0.4 
+                        }]
                     },
                     options: { maintainAspectRatio: false }
                 });
 
-                // 3. CHART DETTE HISTORY
+                // 7. CHART DETTE
                 new Chart(document.getElementById('detteChart'), {
-                    type: 'line',
+                    type: 'bar',
                     data: {
-                        labels: data.charts.dette_history.annees,
-                        datasets: [{ label: 'Dette €/hab', data: data.charts.dette_history.data, borderColor: '#f59e0b', fill: true, backgroundColor: 'rgba(245, 158, 11, 0.1)' }]
+                        labels: globalData.charts.dette.annees,
+                        datasets: [{ label: 'Dette €', data: globalData.charts.dette.data, backgroundColor: '#f59e0b', borderRadius: 4 }]
                     },
                     options: { maintainAspectRatio: false }
                 });
 
-                // 4. CHART VIOLENCE COMPARE
-                new Chart(document.getElementById('violenceChart'), {
-                    type: 'bar',
-                    data: {
-                        labels: data.charts.securite_compare.annees,
-                        datasets: [{ label: 'Moyenne Faits/An', data: data.charts.securite_compare.data, backgroundColor: ['#c0392b', '#3498db', '#e74c3c'] }]
-                    },
-                    options: { maintainAspectRatio: false }
+                // 8. ELEC DETAIL
+                const ctxE = document.getElementById('elecChart');
+                elecChart = new Chart(ctxE, { 
+                    type: 'doughnut', 
+                    data: { labels:[], datasets:[{data:[]}] }, 
+                    options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels:{color:'white'} } }, cutout: '70%' } 
                 });
+                updateElec('2020');
+
+                // 9. MAP
+                const map = L.map('map', {zoomControl: false}).setView([-20.9606, 55.6495], 13);
+                L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {attribution: '© CartoDB'}).addTo(map);
+                L.circleMarker([-20.942, 55.665], {color: '#ef4444', radius: 8}).addTo(map).bindPopup("<b>Fayard</b><br>Tension Élevée");
+                L.circleMarker([-20.950, 55.635], {color: '#f59e0b', radius: 8}).addTo(map).bindPopup("<b>Cambuston</b><br>Zone Pivot");
+                L.circleMarker([-20.9606, 55.6495], {color: '#3b82f6', radius: 6}).addTo(map).bindPopup("<b>Mairie</b>");
 
             } catch (e) { console.error(e); }
         }
+
+        function updateElec(year) {
+            const d = globalData.charts.elections[year];
+            elecChart.data.labels = d.labels;
+            elecChart.data.datasets[0].data = d.data;
+            elecChart.data.datasets[0].backgroundColor = d.colors;
+            elecChart.data.datasets[0].borderWidth = 0;
+            elecChart.update();
+            document.getElementById('elec-analyse').innerHTML = d.analyse;
+        }
+
         init();
     </script>
 </body>
