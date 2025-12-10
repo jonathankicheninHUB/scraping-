@@ -2,29 +2,36 @@ name: Update Data
 
 on:
   schedule:
-    - cron: '0 6 * * 1'
-  workflow_dispatch:
+    - cron: '0 6 * * 1' # Tous les lundis matin
+  workflow_dispatch: # Permet de lancer manuellement le bouton
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    
+    # 🚨 TRÈS IMPORTANT : Donne le droit de modifier le dépôt
     permissions:
       contents: write
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Récupération du code
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v4
+      - name: Installation Python
+        uses: actions/setup-python@v4
         with:
           python-version: '3.9'
 
-      - run: |
+      - name: Installation des librairies
+        run: |
           python -m pip install --upgrade pip
           pip install requests
 
-      - run: python update_data.py
+      - name: Lancement du script
+        run: python update_data.py
 
-      - uses: stefanzweifel/git-auto-commit-action@v5
+      - name: Sauvegarde des résultats
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Force Sync Data"
+          commit_message: "Mise à jour automatique des données"
           file_pattern: data.json
