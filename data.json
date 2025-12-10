@@ -4,160 +4,75 @@
   },
   "kpi": {
     "pop": "57 546",
-    "maire": "Joé BÉDIER",
-    "parti": "DVG (Gauche)",
-    "dette_hab": "1 140 €",
-    "chomage": "29 %",
-    "revenu": "14 500 €",
-    "entreprises": "10 000"
+    "entreprises": "10 000",
+    "dette": "1 140 €",
+    "pauvrete": "42 %"
   },
   "benchmark": [
     {
       "periode": "2020 - ...",
       "maire": "Joé BÉDIER",
-      "tendance": "Union Gauche",
-      "dette_fin_mandat": "1 140 € (En cours)",
-      "pop_evolution": "+1.2 % / an",
-      "faits_marquants": "Social, Rénovation urbaine",
-      "couleur": "#dc3545"
+      "parti": "Union Gauche",
+      "dette_fin": "1 140 €",
+      "pop_evo": "+1.2%",
+      "style": "Social / Proximité",
+      "color": "#e74c3c"
     },
     {
       "periode": "2014 - 2020",
       "maire": "J-Paul VIRAPOULLÉ",
-      "tendance": "Droite (UDI)",
-      "dette_fin_mandat": "1 120 €",
-      "pop_evolution": "+0.5 % / an",
-      "faits_marquants": "Désendettement, Colosse",
-      "couleur": "#0d6efd"
+      "parti": "UDI (Droite)",
+      "dette_fin": "1 120 €",
+      "pop_evo": "+0.5%",
+      "style": "Grands Projets (Colosse)",
+      "color": "#3498db"
     },
     {
       "periode": "2008 - 2014",
       "maire": "Eric FRUTEAU",
-      "tendance": "PCR (Gauche)",
-      "dette_fin_mandat": "1 410 €",
-      "pop_evolution": "+1.8 % / an",
-      "faits_marquants": "Investissements scolaires",
-      "couleur": "#b30000"
-    },
-    {
-      "periode": "1972 - 2008",
-      "maire": "J-Paul VIRAPOULLÉ",
-      "tendance": "UDF/UMP (Droite)",
-      "dette_fin_mandat": "NC",
-      "pop_evolution": "+3.5 % / an (Boom)",
-      "faits_marquants": "Transformation Ville, Sucre",
-      "couleur": "#0d6efd"
+      "parti": "PCR",
+      "dette_fin": "1 410 €",
+      "pop_evo": "+1.8%",
+      "style": "Structuration / École",
+      "color": "#c0392b"
     }
   ],
-  "macro_elections": {
-    "annees": [
-      1983,
-      1989,
-      1995,
-      2001,
-      2008,
-      2014,
-      2020
-    ],
-    "scores_droite": [
-      54.0,
-      56.5,
-      58.2,
-      52.1,
-      46.8,
-      51.6,
-      47.9
-    ],
-    "scores_gauche": [
-      45.0,
-      42.0,
-      40.5,
-      46.5,
-      53.2,
-      48.4,
-      52.0
-    ],
-    "participation": [
-      78.5,
-      76.0,
-      74.5,
-      72.0,
-      73.5,
-      70.4,
-      62.7
-    ]
-  },
-  "diagnostic": {
-    "social": {
-      "taux_pauvrete": "42 %",
-      "allocataires_caf": "16 500",
-      "beneficiaires_rsa": "5 200",
-      "chomage_jeunes": "48 %",
-      "comparaison_pauvrete": {
-        "labels": [
-          "Saint-André",
-          "Moyenne Réunion",
-          "Moyenne France"
-        ],
-        "data": [
-          42,
-          37,
-          14.5
-        ]
-      }
-    },
-    "education": {
-      "illettrisme_jdc": "22 %",
-      "sans_diplome": "41 %"
-    },
-    "logement": {
-      "parc_social": "28 %",
-      "surpeuplement": "18 %"
-    }
-  },
   "history": {
     "annees_demo": [
       1968,
       1982,
-      1990,
       1999,
-      2009,
-      2014,
-      2020,
+      2010,
+      2015,
       2022
     ],
     "pop": [
       22094,
       30075,
-      35049,
       43174,
       53290,
-      55090,
-      57150,
+      56000,
       57546
     ],
     "annees_secu": [
-      2005,
-      2010,
       2015,
-      2018,
+      2017,
+      2019,
       2020,
       2021,
       2022,
       2023
     ],
-    "faits_delinquance": [
-      1850,
-      2100,
+    "faits": [
       2300,
-      2150,
+      2250,
+      1980,
       1900,
       2050,
       2200,
       2180
     ],
     "annees_fin": [
-      2010,
       2013,
       2015,
       2017,
@@ -166,7 +81,6 @@
       2023
     ],
     "dette": [
-      1450,
       1350,
       1380,
       1250,
@@ -175,66 +89,17 @@
       1140
     ]
   },
-  "politics": {
-    "municipales_2020": {
-      "tour_1": {
-        "candidats": [
-          "J.M. VIRAPOULLÉ (DVD)",
-          "Joé BÉDIER (DVG)",
-          "Eric FRUTEAU (PCR)",
-          "Autres"
-        ],
-        "scores": [
-          31.47,
-          24.94,
-          17.56,
-          26.03
-        ],
-        "couleurs": [
-          "#0d6efd",
-          "#dc3545",
-          "#b30000",
-          "#6c757d"
-        ]
-      },
-      "tour_2": {
-        "candidats": [
-          "Joé BÉDIER (Union Gauche)",
-          "J.M. VIRAPOULLÉ (Divers Droite)"
-        ],
-        "scores": [
-          52.04,
-          47.96
-        ],
-        "couleurs": [
-          "#dc3545",
-          "#0d6efd"
-        ]
-      }
+  "diagnostic": {
+    "social": {
+      "pauvrete": "42 %",
+      "chomage_jeunes": "48 %",
+      "rsa": "5 200",
+      "illettrisme": "22 %"
     },
-    "presidentielle_2022": {
-      "candidats": [
-        "J.L. MÉLENCHON",
-        "M. LE PEN",
-        "E. MACRON",
-        "E. ZEMMOUR"
-      ],
-      "scores": [
-        51.5,
-        23.4,
-        14.2,
-        3.1
-      ],
-      "couleurs": [
-        "#cc2443",
-        "#002e61",
-        "#ffeb00",
-        "#5c3c16"
-      ]
+    "politique": {
+      "maire_actuel": "Joé BÉDIER",
+      "tendance": "Majorité (DVG)",
+      "score_2020": "52.04 %"
     }
-  },
-  "finance": {
-    "foncier_bati": "38.50 %",
-    "foncier_non_bati": "45.20 %"
   }
 }
