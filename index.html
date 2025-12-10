@@ -3,85 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Observatoire Historique Saint-André</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <title>SAINT-ANDRÉ | WAR ROOM</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        :root { --primary: #2563eb; --bg: #f8fafc; --card-bg: #ffffff; }
-        body { background-color: var(--bg); font-family: 'Inter', sans-serif; color: #1e293b; padding-bottom: 40px; }
+        :root {
+            --bg-dark: #0f172a;       /* Bleu Nuit Profond */
+            --panel-bg: #1e293b;      /* Panneaux */
+            --accent: #3b82f6;        /* Bleu Action */
+            --danger: #ef4444;        /* Rouge Alerte */
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        body { 
+            background-color: var(--bg-dark); 
+            color: var(--text-main); 
+            font-family: 'Inter', sans-serif; 
+            padding-bottom: 50px;
+        }
+
+        /* HEADER & NAVBAR */
+        .navbar {
+            background: rgba(15, 23, 42, 0.95);
+            border-bottom: 1px solid #334155;
+            backdrop-filter: blur(10px);
+        }
+        .navbar-brand { font-weight: 800; letter-spacing: -0.5px; color: white !important; }
+        .badge-live { 
+            font-family: 'JetBrains Mono'; font-size: 0.7rem; 
+            background: rgba(16, 185, 129, 0.1); color: #10b981; 
+            border: 1px solid #10b981; padding: 4px 8px; border-radius: 4px;
+            animation: pulse 2s infinite;
+        }
+
+        /* KPI CARDS */
+        .kpi-card {
+            background: var(--panel-bg);
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 1.5rem;
+            height: 100%;
+            transition: transform 0.2s;
+        }
+        .kpi-card:hover { transform: translateY(-3px); border-color: var(--accent); }
+        .kpi-label { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600; margin-bottom: 5px; }
+        .kpi-value { font-size: 2rem; font-weight: 800; line-height: 1; }
+        .kpi-sub { font-size: 0.8rem; margin-top: 5px; opacity: 0.8; }
+
+        /* TABS NAVIGATION */
+        .nav-pills .nav-link {
+            color: var(--text-muted);
+            font-weight: 600;
+            background: rgba(255,255,255,0.05);
+            margin-right: 10px;
+            border: 1px solid transparent;
+        }
+        .nav-pills .nav-link.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        /* TABLES */
+        .table-dark-custom { --bs-table-bg: transparent; color: var(--text-muted); font-size: 0.85rem; }
+        .table-dark-custom th { border-bottom: 1px solid #475569; color: white; text-transform: uppercase; font-size: 0.75rem; }
+        .table-dark-custom td { border-bottom: 1px solid #334155; padding: 12px 5px; vertical-align: middle; }
         
-        .header { background: #fff; padding: 1.5rem; border-bottom: 1px solid #e2e8f0; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; }
-        .title { font-weight: 800; font-size: 1.4rem; color: #0f172a; }
-        
-        .card-kpi { background: var(--card-bg); border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: none; height: 100%; transition: transform 0.2s; }
-        .card-kpi:hover { transform: translateY(-3px); }
-        .kpi-lbl { font-size: 0.8rem; text-transform: uppercase; font-weight: 600; color: #64748b; margin-bottom: 0.5rem; }
-        .kpi-val { font-size: 2rem; font-weight: 800; color: #0f172a; line-height: 1; }
-        
-        .nav-pills .nav-link { color: #64748b; font-weight: 600; margin-right: 10px; border-radius: 8px; }
-        .nav-pills .nav-link.active { background-color: var(--primary); color: white; }
-        
-        .table-custom th { font-size: 0.75rem; text-transform: uppercase; color: #64748b; padding-bottom: 10px; }
-        .table-custom td { padding: 15px 5px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
-        
-        .chart-box { position: relative; height: 250px; width: 100%; margin-top: 15px; }
-        .chart-lg { position: relative; height: 350px; width: 100%; margin-top: 15px; }
-        
-        .badge-maire { padding: 5px 10px; border-radius: 6px; color: white; font-weight: bold; font-size: 0.85rem; }
-        .section-title { font-weight: 700; color: #334155; margin-bottom: 15px; border-left: 4px solid var(--primary); padding-left: 10px; }
+        /* CHARTS & MAP */
+        .chart-container { position: relative; height: 300px; width: 100%; }
+        #map { height: 350px; width: 100%; border-radius: 8px; border: 1px solid #334155; filter: grayscale(20%); }
+
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <div class="title"><i class="fas fa-history text-primary"></i> SAINT-ANDRÉ : MÉMOIRE POLITIQUE</div>
-        <span class="badge bg-light text-dark border" id="last-update">Chargement...</span>
-    </div>
+    <nav class="navbar fixed-top">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand" href="#"><i class="fas fa-database text-primary me-2"></i>SAINT-ANDRÉ <span class="text-primary">DATA</span></a>
+            <div class="d-flex align-items-center gap-3">
+                <span class="text-muted small" id="last-update">--</span>
+                <span class="badge-live">● SYSTÈME ACTIF</span>
+            </div>
+        </div>
+    </nav>
 
-    <div class="container">
-        <div class="row g-4 mb-4">
-            <div class="col-md-3"><div class="card-kpi"><div class="kpi-lbl">Population</div><div class="kpi-val" id="kpi-pop">--</div></div></div>
-            <div class="col-md-3"><div class="card-kpi"><div class="kpi-lbl">Pauvreté</div><div class="kpi-val text-danger" id="kpi-pauvrete">--</div></div></div>
-            <div class="col-md-3"><div class="card-kpi"><div class="kpi-lbl">Maire Actuel</div><div class="kpi-val h3" id="kpi-maire">--</div></div></div>
-            <div class="col-md-3"><div class="card-kpi"><div class="kpi-lbl">Dette/Hab</div><div class="kpi-val text-warning" id="kpi-dette">--</div></div></div>
+    <div class="container-fluid px-4" style="margin-top: 80px;">
+        
+        <div class="row g-3 mb-4">
+            <div class="col-md-2">
+                <div class="kpi-card">
+                    <div class="kpi-label">Population</div>
+                    <div class="kpi-value" id="kpi-pop">--</div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="kpi-card">
+                    <div class="kpi-label">Maire Actuel</div>
+                    <div class="kpi-value h4 mb-0" id="kpi-maire">--</div>
+                    <div class="kpi-sub text-primary" id="kpi-parti">--</div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="kpi-card">
+                    <div class="kpi-label">Risque Social</div>
+                    <div class="kpi-value text-danger" id="kpi-pauvrete">--</div>
+                    <div class="kpi-sub">Taux Pauvreté</div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="kpi-card">
+                    <div class="kpi-label">Dette / Hab</div>
+                    <div class="kpi-value text-warning" id="kpi-dette">-- €</div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="kpi-card">
+                    <div class="kpi-label">Entreprises</div>
+                    <div class="kpi-value h4 mb-0" id="kpi-eco">--</div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="kpi-card">
+                    <div class="kpi-label">Sécurité</div>
+                    <div class="kpi-value h4 mb-0 text-danger">Moyen</div>
+                    <div class="kpi-sub">Tendance stable</div>
+                </div>
+            </div>
         </div>
 
         <ul class="nav nav-pills mb-4" id="pills-tab" role="tablist">
-            <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-pol">🏛️ Analyse Politique & Mandats</button></li>
-            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-soc">❤️ Social & Sécurité</button></li>
-            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-his">📈 Démographie & Finances</button></li>
+            <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-pol">🏛️ STRATÉGIE POLITIQUE</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-soc">❤️ SOCIAL & TERRITOIRE</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-hist">📈 HISTORIQUE & FINANCES</button></li>
         </ul>
 
         <div class="tab-content">
+            
             <div class="tab-pane fade show active" id="tab-pol">
-                
-                <div class="card-kpi mb-4">
-                    <h5 class="section-title">Guerre des Blocs (1983 - 2020)</h5>
-                    <p class="text-muted small">Évolution des forces politiques : Droite (Virapoullé) vs Gauche (PCR/Bédier)</p>
-                    <div class="chart-lg"><canvas id="macroChart"></canvas></div>
-                </div>
-
-                <div class="row g-4 mb-4">
-                    <div class="col-md-8">
-                        <div class="card-kpi h-100">
-                            <h5 class="section-title">Benchmark des Mandats</h5>
-                            <table class="table-custom w-100">
-                                <thead><tr><th>Période</th><th>Maire</th><th>Parti</th><th>Dette Fin</th><th>Pop.</th><th>Style</th></tr></thead>
-                                <tbody id="bench-body"></tbody>
-                            </table>
+                <div class="row g-4">
+                    <div class="col-lg-8">
+                        <div class="kpi-card mb-4">
+                            <h5 class="text-white mb-4">Guerre des Blocs (1983 - 2020)</h5>
+                            <div class="chart-container" style="height: 250px;">
+                                <canvas id="macroChart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="kpi-card">
+                            <h5 class="text-white mb-3">Benchmark des Mandats</h5>
+                            <div class="table-responsive">
+                                <table class="table table-dark-custom mb-0">
+                                    <thead><tr><th>Période</th><th>Maire</th><th>Parti</th><th>Dette Fin</th><th>Style</th></tr></thead>
+                                    <tbody id="bench-body"></tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
-                    
-                    <div class="col-md-4">
-                        <div class="card-kpi h-100">
-                            <h5 class="section-title">Zoom Élections</h5>
-                            <select class="form-select mb-3" id="select-elec" onchange="updateElecChart(this.value)">
-                                <option value="2020">2020 - Victoire Bédier</option>
-                                <option value="2014">2014 - Retour Virapoullé</option>
-                                <option value="2008">2008 - Victoire Fruteau</option>
+
+                    <div class="col-lg-4">
+                        <div class="kpi-card h-100">
+                            <h5 class="text-white mb-3">Zoom Scrutins Clés</h5>
+                            <select class="form-select bg-dark text-white border-secondary mb-3" id="elec-select" onchange="updateElec(this.value)">
+                                <option value="2020">Municipales 2020 (Victoire Bédier)</option>
+                                <option value="2014">Municipales 2014 (Retour Virapoullé)</option>
+                                <option value="2008">Municipales 2008 (Victoire Fruteau)</option>
                             </select>
-                            <div class="chart-box"><canvas id="detailElecChart"></canvas></div>
+                            <div class="chart-container" style="height: 250px;">
+                                <canvas id="detailElecChart"></canvas>
+                            </div>
+                            <div class="alert alert-dark mt-3 small border border-secondary" id="elec-analyse">
+                                -- Analyse --
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -89,115 +187,177 @@
 
             <div class="tab-pane fade" id="tab-soc">
                 <div class="row g-4">
-                    <div class="col-md-4">
-                        <div class="card-kpi">
-                            <h5 class="section-title">Indicateurs de Précarité</h5>
-                            <div class="d-flex justify-content-between mb-2"><span>Chômage Jeunes</span><span class="fw-bold text-danger" id="soc-chomage">--</span></div>
-                            <div class="progress mb-3" style="height:6px"><div class="progress-bar bg-danger" style="width:48%"></div></div>
-                            <div class="d-flex justify-content-between mb-2"><span>Illettrisme</span><span class="fw-bold text-warning" id="soc-illettrisme">--</span></div>
-                            <div class="progress mb-3" style="height:6px"><div class="progress-bar bg-warning" style="width:22%"></div></div>
-                            <ul class="list-group list-group-flush mt-3">
-                                <li class="list-group-item d-flex justify-content-between"><span>Alloc. CAF</span><span class="fw-bold" id="soc-caf">--</span></li>
-                                <li class="list-group-item d-flex justify-content-between"><span>RSA</span><span class="fw-bold" id="soc-rsa">--</span></li>
-                            </ul>
+                    <div class="col-lg-4">
+                        <div class="kpi-card h-100">
+                            <h5 class="text-white mb-4">Indicateurs de Précarité</h5>
+                            
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1 small"><span>Chômage Jeunes</span><span class="text-danger fw-bold" id="soc-chomage">--</span></div>
+                                <div class="progress" style="height:6px"><div class="progress-bar bg-danger" style="width:48%"></div></div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1 small"><span>Illettrisme</span><span class="text-warning fw-bold" id="soc-illettrisme">--</span></div>
+                                <div class="progress" style="height:6px"><div class="progress-bar bg-warning" style="width:22%"></div></div>
+                            </div>
+
+                            <hr class="border-secondary my-4">
+                            
+                            <div class="row text-center">
+                                <div class="col-6">
+                                    <h3 class="text-white mb-0" id="soc-caf">--</h3>
+                                    <small class="text-muted text-uppercase">Alloc. CAF</small>
+                                </div>
+                                <div class="col-6">
+                                    <h3 class="text-danger mb-0" id="soc-rsa">--</h3>
+                                    <small class="text-muted text-uppercase">RSA</small>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-8">
-                        <div class="card-kpi">
-                            <h5 class="section-title">Sécurité (2015-2023)</h5>
-                            <div class="chart-lg"><canvas id="secuChart"></canvas></div>
+
+                    <div class="col-lg-8">
+                        <div class="kpi-card mb-4">
+                            <h5 class="text-white mb-3">Zones Stratégiques (QPV)</h5>
+                            <div id="map"></div>
+                        </div>
+                        <div class="kpi-card">
+                            <h5 class="text-white mb-3">Tendance Sécurité (2015-2023)</h5>
+                            <div class="chart-container" style="height: 200px;">
+                                <canvas id="secuChart"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="tab-pane fade" id="tab-his">
+            <div class="tab-pane fade" id="tab-hist">
                 <div class="row g-4">
-                    <div class="col-md-8">
-                        <div class="card-kpi">
-                            <h5 class="section-title">Trajectoire Démographique (1968-2022)</h5>
-                            <div class="chart-lg"><canvas id="demoChart"></canvas></div>
+                    <div class="col-lg-8">
+                        <div class="kpi-card">
+                            <h5 class="text-white mb-3">Trajectoire Démographique (1968-2024)</h5>
+                            <div class="chart-container"><canvas id="demoChart"></canvas></div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="card-kpi">
-                            <h5 class="section-title">Dette Publique</h5>
-                            <div class="chart-lg"><canvas id="detteChart"></canvas></div>
+                    <div class="col-lg-4">
+                        <div class="kpi-card">
+                            <h5 class="text-white mb-3">Dette Publique</h5>
+                            <div class="chart-container"><canvas id="detteChart"></canvas></div>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
     <script>
         let globalData;
         let detailChart;
 
-        async function load() {
+        async function init() {
             try {
                 const r = await fetch('data.json');
-                if(!r.ok) throw new Error("Erreur JSON");
+                if(!r.ok) throw new Error("JSON Error");
                 globalData = await r.json();
 
-                // KPI
+                // 1. KPI
                 document.getElementById('last-update').innerText = "MAJ: " + globalData.meta.last_update;
-                document.getElementById('kpi-pop').innerText = globalData.kpi.pop;
-                document.getElementById('kpi-pauvrete').innerText = globalData.kpi.pauvrete;
-                document.getElementById('kpi-maire').innerText = globalData.kpi.maire.split(' ')[1];
-                document.getElementById('kpi-dette').innerText = globalData.kpi.dette_hab;
+                document.getElementById('kpi-pop').innerText = globalData.kpi_global.pop;
+                document.getElementById('kpi-maire').innerText = globalData.politique.kpi_maire.nom;
+                document.getElementById('kpi-parti').innerText = globalData.politique.kpi_maire.parti;
+                document.getElementById('kpi-pauvrete').innerText = globalData.kpi_global.pauvrete;
+                document.getElementById('kpi-dette').innerText = globalData.kpi_global.dette + " €";
+                document.getElementById('kpi-eco').innerText = globalData.kpi_global.entreprises;
 
-                // SOCIAL
-                document.getElementById('soc-chomage').innerText = globalData.diagnostic.social.chomage_jeunes;
-                document.getElementById('soc-illettrisme').innerText = globalData.diagnostic.social.illettrisme;
-                document.getElementById('soc-caf').innerText = globalData.diagnostic.social.allocataires_caf;
-                document.getElementById('soc-rsa').innerText = globalData.diagnostic.social.beneficiaires_rsa;
+                // 2. SOCIAL
+                document.getElementById('soc-chomage').innerText = globalData.social.indicateurs_precarite.chomage_jeunes;
+                document.getElementById('soc-illettrisme').innerText = globalData.social.education.illettrisme_jdc;
+                document.getElementById('soc-caf').innerText = globalData.social.indicateurs_precarite.allocataires_caf;
+                document.getElementById('soc-rsa').innerText = globalData.social.indicateurs_precarite.beneficiaires_rsa;
 
-                // BENCHMARK TABLE
+                // 3. TABLEAU BENCHMARK
                 const tb = document.getElementById('bench-body');
                 tb.innerHTML = '';
-                globalData.benchmark.forEach(b => {
-                    tb.innerHTML += `<tr><td><strong>${b.periode}</strong></td><td><span class="badge-maire" style="background:${b.color}">${b.maire}</span></td><td>${b.parti}</td><td class="fw-bold">${b.dette_fin}</td><td>${b.pop_evo}</td><td>${b.style}</td></tr>`;
+                globalData.politique.benchmark_maires.forEach(m => {
+                    tb.innerHTML += `
+                        <tr>
+                            <td class="text-primary fw-bold">${m.periode}</td>
+                            <td><span class="badge" style="background:${m.color}">${m.nom}</span></td>
+                            <td>${m.bord}</td>
+                            <td class="text-white font-monospace">${m.dette_fin}</td>
+                            <td class="small text-muted">${m.style}</td>
+                        </tr>`;
                 });
 
-                // CHART MACRO POLITIQUE
+                // 4. CHART MACRO POLITIQUE
                 new Chart(document.getElementById('macroChart'), {
                     type: 'line',
                     data: {
-                        labels: globalData.macro_politique.annees,
+                        labels: globalData.politique.macro_tendances.annees,
                         datasets: [
-                            { label: 'Bloc Droite (Virapoullé)', data: globalData.macro_politique.bloc_droite, borderColor: '#0d6efd', tension: 0.3, borderWidth: 3 },
-                            { label: 'Bloc Gauche (PCR/Bédier)', data: globalData.macro_politique.bloc_gauche, borderColor: '#dc3545', tension: 0.3, borderWidth: 3 },
-                            { label: 'Participation', data: globalData.macro_politique.participation, borderColor: '#95a5a6', borderDash: [5,5], hidden: true }
+                            { label: 'Bloc Droite', data: globalData.politique.macro_tendances.bloc_droite, borderColor: '#3b82f6', tension: 0.3 },
+                            { label: 'Bloc Gauche', data: globalData.politique.macro_tendances.bloc_gauche, borderColor: '#ef4444', tension: 0.3 }
                         ]
                     },
-                    options: { maintainAspectRatio: false, scales: { y: { min: 30, max: 70 } } }
+                    options: { maintainAspectRatio: false, scales: { y: { min: 30 } }, plugins: { legend: { labels: { color: '#94a3b8' } } } }
                 });
 
-                // INIT DETAIL CHART
-                const ctx = document.getElementById('detailElecChart').getContext('2d');
-                detailChart = new Chart(ctx, { type: 'doughnut', data: { labels: [], datasets: [{ data: [] }] }, options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } } });
-                updateElecChart('2020');
+                // 5. CHART DETAIL ELECTION (INIT)
+                const ctxD = document.getElementById('detailElecChart').getContext('2d');
+                detailChart = new Chart(ctxD, { type: 'doughnut', data: { labels: [], datasets: [{ data: [] }] }, options: { maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#fff' } } } } });
+                updateElec('2020');
 
-                // OTHER CHARTS
-                new Chart(document.getElementById('secuChart'), { type: 'line', data: { labels: globalData.history.annees_secu, datasets: [{ label: 'Faits', data: globalData.history.faits_delinquance, borderColor: '#334155', backgroundColor: 'rgba(51, 65, 85, 0.1)', fill: true, tension: 0.4 }] }, options: { maintainAspectRatio: false } });
-                new Chart(document.getElementById('demoChart'), { type: 'line', data: { labels: globalData.history.annees_demo, datasets: [{ label: 'Habitants', data: globalData.history.pop, borderColor: '#2563eb', borderWidth: 3 }] }, options: { maintainAspectRatio: false } });
-                new Chart(document.getElementById('detteChart'), { type: 'bar', data: { labels: globalData.history.annees_fin, datasets: [{ label: 'Dette €', data: globalData.history.dette, backgroundColor: '#f59e0b', borderRadius: 4 }] }, options: { maintainAspectRatio: false } });
+                // 6. MAP
+                const map = L.map('map', {zoomControl: false}).setView([-20.9606, 55.6495], 13);
+                L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; CartoDB' }).addTo(map);
+                
+                // 7. CHART SECU
+                new Chart(document.getElementById('secuChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: globalData.regalien.securite_trend.annees,
+                        datasets: [{ label: 'Faits Constatés', data: globalData.regalien.securite_trend.faits, backgroundColor: '#475569' }]
+                    },
+                    options: { maintainAspectRatio: false }
+                });
+
+                // 8. CHART DEMO
+                new Chart(document.getElementById('demoChart'), {
+                    type: 'line',
+                    data: {
+                        labels: globalData.social.demographie_historique.annees,
+                        datasets: [{ label: 'Population', data: globalData.social.demographie_historique.population, borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.1)', fill: true }]
+                    },
+                    options: { maintainAspectRatio: false }
+                });
+
+                // 9. CHART DETTE
+                new Chart(document.getElementById('detteChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: globalData.regalien.finances_trend.annees,
+                        datasets: [{ label: 'Dette €', data: globalData.regalien.finances_trend.dette, backgroundColor: '#f59e0b' }]
+                    },
+                    options: { maintainAspectRatio: false }
+                });
 
             } catch (e) { console.error(e); }
         }
 
-        function updateElecChart(year) {
-            const d = globalData.politics_details[year];
+        function updateElec(year) {
+            const d = globalData.politique.details_scrutins[year];
             detailChart.data.labels = d.candidats;
             detailChart.data.datasets[0].data = d.scores;
             detailChart.data.datasets[0].backgroundColor = d.couleurs;
             detailChart.update();
+            document.getElementById('elec-analyse').innerHTML = `<strong>Analyse :</strong> ${d.analyse}`;
         }
 
-        load();
+        init();
     </script>
 </body>
 </html>
