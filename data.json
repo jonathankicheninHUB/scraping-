@@ -7,9 +7,97 @@
     "maire": "Joé BÉDIER",
     "parti": "DVG (Gauche)",
     "dette_hab": "1 140 €",
-    "chomage": "29.2 %",
+    "chomage": "29 %",
     "revenu": "14 500 €",
     "entreprises": "10 000"
+  },
+  "diagnostic": {
+    "social": {
+      "taux_pauvrete": "42 %",
+      "allocataires_caf": "16 500",
+      "beneficiaires_rsa": "5 200",
+      "chomage_jeunes": "48 %",
+      "comparaison_pauvrete": {
+        "labels": [
+          "Saint-André",
+          "Moyenne Réunion",
+          "Moyenne France"
+        ],
+        "data": [
+          42,
+          37,
+          14.5
+        ]
+      }
+    },
+    "education": {
+      "illettrisme_jdc": "22 %",
+      "sans_diplome": "41 %"
+    },
+    "logement": {
+      "parc_social": "28 %",
+      "surpeuplement": "18 %"
+    }
+  },
+  "history": {
+    "annees_demo": [
+      1968,
+      1982,
+      1990,
+      1999,
+      2009,
+      2014,
+      2020,
+      2022
+    ],
+    "pop": [
+      22094,
+      30075,
+      35049,
+      43174,
+      53290,
+      55090,
+      57150,
+      57546
+    ],
+    "annees_secu": [
+      2005,
+      2010,
+      2015,
+      2018,
+      2020,
+      2021,
+      2022,
+      2023
+    ],
+    "faits_delinquance": [
+      1850,
+      2100,
+      2300,
+      2150,
+      1900,
+      2050,
+      2200,
+      2180
+    ],
+    "annees_fin": [
+      2010,
+      2013,
+      2015,
+      2017,
+      2019,
+      2021,
+      2023
+    ],
+    "dette": [
+      1450,
+      1350,
+      1380,
+      1250,
+      1100,
+      1150,
+      1140
+    ]
   },
   "politics": {
     "municipales_2020": {
@@ -69,41 +157,8 @@
       ]
     }
   },
-  "history": {
-    "annees_demo": [
-      1968,
-      1982,
-      1999,
-      2011,
-      2022
-    ],
-    "pop": [
-      22094,
-      30075,
-      43174,
-      55090,
-      57546
-    ],
-    "annees_fin": [
-      2013,
-      2015,
-      2017,
-      2019,
-      2021,
-      2023
-    ],
-    "dette": [
-      1350,
-      1380,
-      1250,
-      1100,
-      1150,
-      1140
-    ]
-  },
   "finance": {
     "foncier_bati": "38.50 %",
-    "foncier_non_bati": "45.20 %",
-    "habitation_sec": "22.50 %"
+    "foncier_non_bati": "45.20 %"
   }
 }
