@@ -1,7 +1,6 @@
 {
   "meta": {
-    "last_update": "10/12/2025 à 00:46",
-    "source": "INSEE Historique (estimation), API Sirene, Ministère Intérieur"
+    "last_update": "10/12/2025 à 00:51"
   },
   "kpi": {
     "pop": "57 546",
@@ -12,16 +11,16 @@
   "demographie_historique": {
     "annees": [
       1990,
-      2000,
+      1999,
       2010,
-      2016,
+      2015,
       2022
     ],
     "population": [
-      43500,
-      48800,
-      54500,
-      56000,
+      35000,
+      43000,
+      52000,
+      55000,
       57546
     ]
   },
@@ -102,24 +101,18 @@
     {
       "nom": "BÉDIER Joé",
       "fonction": "Maire",
-      "groupe": "Majorité (DVG)",
+      "groupe": "Majorité",
       "mandat": "2020-2026"
     },
     {
       "nom": "VIRAPOULLÉ J-Marie",
-      "fonction": "Conseiller Mun.",
-      "groupe": "Opposition (DVD)",
+      "fonction": "Conseiller",
+      "groupe": "Opposition",
       "mandat": "2020-2026"
     },
     {
       "nom": "PAYET Marie",
       "fonction": "1ère Adjointe",
-      "groupe": "Majorité",
-      "mandat": "2020-2026"
-    },
-    {
-      "nom": "CANIGUY Jean-Paul",
-      "fonction": "Adjoint Finances",
       "groupe": "Majorité",
       "mandat": "2020-2026"
     }
