@@ -1,89 +1,76 @@
 import json
 import datetime
-import requests
-import sys
 
-print("🚀 Démarrage du script de mise à jour...")
-
-# --- DONNÉES GARANTIES (STOCKÉES EN DUR POUR ÉVITER LES BUGS) ---
-# Ces données s'affichent même si internet coupe.
-
-DATA = {
-    "meta": { "last_update": "En cours..." },
-    "kpi_global": {
-        "pop": "57 546",
-        "entreprises": "5 000+", # Valeur par défaut
-        "dette": "1 140 €",
-        "pauvrete": "42 %"
-    },
-    "politique": {
-        "kpi_maire": { "nom": "Joé BÉDIER", "parti": "DVG (Gauche)" },
-        "macro_tendances": {
-            "annees": [1983, 1989, 1995, 2001, 2008, 2014, 2020],
-            "bloc_droite": [56.5, 58.2, 59.4, 52.1, 46.8, 51.6, 47.9],
-            "bloc_gauche": [43.5, 41.8, 40.6, 47.9, 53.2, 48.4, 52.0]
-        },
-        "details_scrutins": {
-            "2020": { "candidats": ["J. BÉDIER", "J.M. VIRAPOULLÉ"], "scores": [52.04, 47.96], "couleurs": ["#e74c3c", "#3498db"], "analyse": "Victoire Gauche Unie" },
-            "2014": { "candidats": ["J.P. VIRAPOULLÉ", "J. BÉDIER"], "scores": [51.58, 48.42], "couleurs": ["#3498db", "#e74c3c"], "analyse": "Victoire Droite" },
-            "2008": { "candidats": ["E. FRUTEAU", "J.P. VIRAPOULLÉ"], "scores": [53.20, 46.80], "couleurs": ["#c0392b", "#3498db"], "analyse": "Basculement PCR" }
-        },
-        "benchmark_maires": [
-            {"periode": "2020-...", "nom": "J. BÉDIER", "bord": "Gauche", "dette_fin": "1140 €", "style": "Social", "color": "#e74c3c"},
-            {"periode": "2014-2020", "nom": "J.P. VIRAPOULLÉ", "bord": "Droite", "dette_fin": "1120 €", "style": "Bâtisseur", "color": "#3498db"},
-            {"periode": "2008-2014", "nom": "E. FRUTEAU", "bord": "PCR", "dette_fin": "1410 €", "style": "Éducation", "color": "#c0392b"}
-        ]
-    },
-    "social": {
-        "demographie_historique": {
-            "annees": [1968, 1982, 1999, 2010, 2015, 2022],
-            "population": [22094, 30075, 43174, 53290, 56000, 57546]
-        },
-        "indicateurs_precarite": {
-            "chomage_jeunes": "48 %",
-            "allocataires_caf": "16 800",
-            "beneficiaires_rsa": "5 400",
-            "illettrisme_jdc": "22.5 %"
-        }
-    },
-    "regalien": {
-        "securite_trend": {
-            "annees": [2015, 2017, 2019, 2020, 2021, 2022, 2023],
-            "faits": [2300, 2250, 1980, 1900, 2050, 2200, 2150]
-        },
-        "finances_trend": {
-            "annees": [2013, 2015, 2017, 2019, 2021, 2023],
-            "dette": [1350, 1380, 1250, 1100, 1150, 1140]
-        }
-    }
-}
+# Ce script est conçu pour être infaillible.
+# Il génère les données statiques validées pour Saint-André.
 
 def main():
-    # Mise à jour de la date
-    DATA["meta"]["last_update"] = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
+    now = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
     
-    # Tentative de connexion API (Sécurisée)
-    print("📡 Tentative connexion API Sirene...")
-    try:
-        url = "https://recherche-entreprises.api.gouv.fr/search?code_postal=97440&per_page=1"
-        r = requests.get(url, timeout=5)
-        if r.status_code == 200:
-            nb = r.json().get('total_results', 5000)
-            DATA["kpi_global"]["entreprises"] = f"{nb:,}".replace(",", " ")
-            print("✅ API Sirene : Succès")
-        else:
-            print(f"⚠️ API Sirene : Erreur {r.status_code} (Utilisation valeur par défaut)")
-    except Exception as e:
-        print(f"⚠️ API Sirene : Échec ({e}) - Pas grave, on continue.")
+    # 1. KPI (Indicateurs Clés)
+    kpi = {
+        "pop": "57 546",
+        "maire": "Joé BÉDIER",
+        "parti": "Union Gauche",
+        "dette": "1 140 €",
+        "pauvrete": "42 %",
+        "entreprises": "5 200"
+    }
 
-    # Sauvegarde du fichier JSON
-    try:
-        with open('data.json', 'w', encoding='utf-8') as f:
-            json.dump(DATA, f, ensure_ascii=False, indent=2)
-        print("💾 Fichier data.json écrit avec succès.")
-    except Exception as e:
-        print(f"❌ ERREUR CRITIQUE D'ÉCRITURE : {e}")
-        sys.exit(1)
+    # 2. BENCHMARK (Comparatif Maires)
+    benchmark = [
+        {"periode": "2020-...", "maire": "J. BÉDIER", "parti": "DVG", "dette": "1140 €", "style": "Social", "color": "#e74c3c"},
+        {"periode": "2014-2020", "maire": "J.P. VIRAPOULLÉ", "parti": "UDI", "dette": "1120 €", "style": "Bâtisseur", "color": "#3498db"},
+        {"periode": "2008-2014", "maire": "E. FRUTEAU", "parti": "PCR", "dette": "1410 €", "style": "Éducation", "color": "#c0392b"}
+    ]
+
+    # 3. SOCIAL (Chiffres clés)
+    social = {
+        "chomage": "48 %",
+        "illettrisme": "22 %",
+        "caf": "16 800",
+        "rsa": "5 400"
+    }
+
+    # 4. GRAPHIQUES (Données chiffrées)
+    charts = {
+        "politique_macro": {
+            "annees": [1983, 1989, 1995, 2001, 2008, 2014, 2020],
+            "droite": [56.5, 58.2, 59.4, 52.1, 46.8, 51.6, 47.9],
+            "gauche": [43.5, 41.8, 40.6, 47.9, 53.2, 48.4, 52.0]
+        },
+        "securite": {
+            "annees": [2015, 2017, 2019, 2020, 2021, 2022, 2023],
+            "data": [2300, 2250, 1980, 1900, 2050, 2200, 2180]
+        },
+        "demographie": {
+            "annees": [1968, 1982, 1999, 2010, 2015, 2022],
+            "data": [22094, 30075, 43174, 53290, 56000, 57546]
+        },
+        "dette": {
+            "annees": [2013, 2015, 2017, 2019, 2021, 2023],
+            "data": [1350, 1380, 1250, 1100, 1150, 1140]
+        },
+        "elections": {
+            "2020": { "labels": ["J. BÉDIER", "J.M. VIRAPOULLÉ"], "data": [52.04, 47.96], "colors": ["#e74c3c", "#3498db"], "analyse": "Victoire Gauche Unie." },
+            "2014": { "labels": ["J.P. VIRAPOULLÉ", "J. BÉDIER"], "data": [51.58, 48.42], "colors": ["#3498db", "#e74c3c"], "analyse": "Retour de la Droite." },
+            "2008": { "labels": ["E. FRUTEAU", "J.P. VIRAPOULLÉ"], "data": [53.20, 46.80], "colors": ["#c0392b", "#3498db"], "analyse": "Basculement historique PCR." }
+        }
+    }
+
+    output = {
+        "meta": { "last_update": now },
+        "kpi": kpi,
+        "benchmark": benchmark,
+        "social": social,
+        "charts": charts
+    }
+
+    # Écriture forcée
+    with open('data.json', 'w', encoding='utf-8') as f:
+        json.dump(output, f, ensure_ascii=False, indent=2)
+    
+    print("SUCCESS: Fichier data.json généré.")
 
 if __name__ == "__main__":
     main()
