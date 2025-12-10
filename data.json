@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_update": "10/12/2025 à 00:06",
+    "last_update": "10/12/2025 à 00:13",
     "source": "Ministère Intérieur, API Géo, API Sirene"
   },
   "kpi": {
@@ -18,10 +18,6 @@
     "votes": [
       52.04,
       47.96
-    ],
-    "voix_reelles": [
-      12105,
-      11162
     ],
     "sieges": [
       30,
@@ -53,21 +49,21 @@
   },
   "elus": [
     {
-      "nom": "BEDIER Joé",
+      "nom": "BÉDIER Joé",
       "fonction": "Maire",
       "groupe": "Majorité (DVG)",
+      "mandat": "2020-2026"
+    },
+    {
+      "nom": "VIRAPOULLÉ J-Marie",
+      "fonction": "Conseiller Mun.",
+      "groupe": "Opposition (DVD)",
       "mandat": "2020-2026"
     },
     {
       "nom": "PAYET Marie",
       "fonction": "1ère Adjointe",
       "groupe": "Majorité",
-      "mandat": "2020-2026"
-    },
-    {
-      "nom": "VIRAPOULLE J-Marie",
-      "fonction": "Conseiller Mun.",
-      "groupe": "Opposition (DVD)",
       "mandat": "2020-2026"
     },
     {
