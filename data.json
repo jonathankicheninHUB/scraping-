@@ -11,6 +11,82 @@
     "revenu": "14 500 €",
     "entreprises": "10 000"
   },
+  "benchmark": [
+    {
+      "periode": "2020 - ...",
+      "maire": "Joé BÉDIER",
+      "tendance": "Union Gauche",
+      "dette_fin_mandat": "1 140 € (En cours)",
+      "pop_evolution": "+1.2 % / an",
+      "faits_marquants": "Social, Rénovation urbaine",
+      "couleur": "#dc3545"
+    },
+    {
+      "periode": "2014 - 2020",
+      "maire": "J-Paul VIRAPOULLÉ",
+      "tendance": "Droite (UDI)",
+      "dette_fin_mandat": "1 120 €",
+      "pop_evolution": "+0.5 % / an",
+      "faits_marquants": "Désendettement, Colosse",
+      "couleur": "#0d6efd"
+    },
+    {
+      "periode": "2008 - 2014",
+      "maire": "Eric FRUTEAU",
+      "tendance": "PCR (Gauche)",
+      "dette_fin_mandat": "1 410 €",
+      "pop_evolution": "+1.8 % / an",
+      "faits_marquants": "Investissements scolaires",
+      "couleur": "#b30000"
+    },
+    {
+      "periode": "1972 - 2008",
+      "maire": "J-Paul VIRAPOULLÉ",
+      "tendance": "UDF/UMP (Droite)",
+      "dette_fin_mandat": "NC",
+      "pop_evolution": "+3.5 % / an (Boom)",
+      "faits_marquants": "Transformation Ville, Sucre",
+      "couleur": "#0d6efd"
+    }
+  ],
+  "macro_elections": {
+    "annees": [
+      1983,
+      1989,
+      1995,
+      2001,
+      2008,
+      2014,
+      2020
+    ],
+    "scores_droite": [
+      54.0,
+      56.5,
+      58.2,
+      52.1,
+      46.8,
+      51.6,
+      47.9
+    ],
+    "scores_gauche": [
+      45.0,
+      42.0,
+      40.5,
+      46.5,
+      53.2,
+      48.4,
+      52.0
+    ],
+    "participation": [
+      78.5,
+      76.0,
+      74.5,
+      72.0,
+      73.5,
+      70.4,
+      62.7
+    ]
+  },
   "diagnostic": {
     "social": {
       "taux_pauvrete": "42 %",
