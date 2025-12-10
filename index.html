@@ -3,25 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Master Observatoire Saint-André</title>
+    <title>Observatoire Stratégique Saint-André</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body { background-color: #f0f2f5; font-family: 'Segoe UI', sans-serif; }
-        .header { background: #1abc9c; color: white; padding: 2rem 0; margin-bottom: 2rem; border-bottom: 5px solid #16a085; }
-        .card { border: none; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 1.5rem; transition: transform 0.2s; }
-        .card:hover { transform: translateY(-3px); }
-        .card-header { background-color: white; border-bottom: 1px solid #f0f0f0; font-weight: bold; text-transform: uppercase; color: #7f8c8d; font-size: 0.9rem; }
-        .kpi-num { font-size: 2.2rem; font-weight: 800; color: #2c3e50; }
-        .kpi-label { font-size: 0.85rem; color: #95a5a6; text-transform: uppercase; letter-spacing: 1px; }
-        .alert-custom { border-left: 4px solid #e74c3c; background-color: #fff; color: #333; padding: 15px; }
+        .header { background: #34495e; color: white; padding: 2rem 0; margin-bottom: 2rem; border-bottom: 5px solid #e67e22; }
+        .card { border: none; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 1.5rem; }
+        .card-header { background-color: white; border-bottom: 1px solid #f0f0f0; font-weight: bold; text-transform: uppercase; color: #7f8c8d; }
+        .kpi-num { font-size: 2rem; font-weight: 800; color: #2c3e50; }
+        .kpi-label { font-size: 0.8rem; color: #95a5a6; text-transform: uppercase; }
+        .table-benchmark thead { background-color: #2c3e50; color: white; }
     </style>
 </head>
 <body>
 
 <div class="header text-center">
-    <h1><i class="fas fa-database"></i> Saint-André : Dossier Stratégique</h1>
-    <p>Social • Sécurité • Politique • Finances • Historique</p>
+    <h1><i class="fas fa-landmark"></i> Saint-André : Vision Macro & Historique</h1>
+    <p>Benchmark des Mandats (1972-2024) • Social • Finances</p>
     <span class="badge bg-light text-dark">Mise à jour : <span id="date">...</span></span>
 </div>
 
@@ -29,85 +28,76 @@
 
     <div class="row text-center mb-2">
         <div class="col-md-2"><div class="card p-3"><div class="kpi-label">Population</div><div class="kpi-num" id="pop">--</div></div></div>
-        <div class="col-md-2"><div class="card p-3"><div class="kpi-label">Maire</div><div class="kpi-num h4" id="maire">--</div><small class="text-success" id="parti">--</small></div></div>
+        <div class="col-md-2"><div class="card p-3"><div class="kpi-label">Maire</div><div class="kpi-num h5" id="maire">--</div><small class="text-success" id="parti">--</small></div></div>
         <div class="col-md-2"><div class="card p-3"><div class="kpi-label">Pauvreté</div><div class="kpi-num text-danger" id="pauvrete">--</div></div></div>
         <div class="col-md-2"><div class="card p-3"><div class="kpi-label">Dette/Hab</div><div class="kpi-num text-warning" id="dette">--</div></div></div>
-        <div class="col-md-2"><div class="card p-3"><div class="kpi-label">Chômage Jeunes</div><div class="kpi-num text-danger" id="chomage_jeunes">--</div></div></div>
-        <div class="col-md-2"><div class="card p-3"><div class="kpi-label">Entreprises</div><div class="kpi-num h4" id="entreprises">--</div></div></div>
+        <div class="col-md-2"><div class="card p-3"><div class="kpi-label">Chômage</div><div class="kpi-num text-danger" id="chomage">--</div></div></div>
+        <div class="col-md-2"><div class="card p-3"><div class="kpi-label">Entreprises</div><div class="kpi-num h5" id="entreprises">--</div></div></div>
     </div>
 
-    <h4 class="text-secondary mb-3"><i class="fas fa-notes-medical"></i> Diagnostic Social & Besoins (Priorité Programme)</h4>
+    <h4 class="text-secondary mb-3"><i class="fas fa-balance-scale"></i> Benchmark des Mandats (1972 - 2024)</h4>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">Guerre Politique : Évolution des Blocs (1983-2020)</div>
+                <div class="card-body">
+                    <canvas id="macroElecChart" height="80"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">Comparatif des Gestionnaires</div>
+                <div class="table-responsive">
+                    <table class="table table-hover table-benchmark mb-0">
+                        <thead>
+                            <tr>
+                                <th>Période</th>
+                                <th>Maire</th>
+                                <th>Orientation</th>
+                                <th>Dette Fin Mandat</th>
+                                <th>Dyn. Pop</th>
+                                <th>Marqueur</th>
+                            </tr>
+                        </thead>
+                        <tbody id="benchmark-body">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h4 class="text-secondary mb-3 mt-4"><i class="fas fa-notes-medical"></i> Diagnostic Social (Le Terrain)</h4>
     <div class="row">
         <div class="col-md-4">
             <div class="card h-100">
-                <div class="card-header">Le Fossé Social (Comparatif)</div>
-                <div class="card-body">
-                    <canvas id="pauvreteChart"></canvas>
-                    <div class="mt-3 small text-muted">
-                        <i class="fas fa-info-circle"></i> Saint-André dépasse largement la moyenne régionale. Cible prioritaire pour les aides.
-                    </div>
-                </div>
+                <div class="card-header">Comparatif Pauvreté</div>
+                <div class="card-body"><canvas id="pauvreteChart"></canvas></div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card h-100">
-                <div class="card-header">Indicateurs de Précarité</div>
+                <div class="card-header">Indicateurs Clés</div>
                 <div class="card-body">
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Allocataires CAF
-                            <span class="badge bg-primary rounded-pill" id="caf">--</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Bénéficiaires RSA
-                            <span class="badge bg-danger rounded-pill" id="rsa">--</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Illettrisme (JDC)
-                            <span class="badge bg-warning text-dark rounded-pill" id="illettrisme">--</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Logement Social
-                            <span class="badge bg-info text-dark rounded-pill" id="hlm">--</span>
-                        </li>
+                        <li class="list-group-item d-flex justify-content-between">Alloc. CAF <span class="badge bg-primary" id="caf">--</span></li>
+                        <li class="list-group-item d-flex justify-content-between">RSA <span class="badge bg-danger" id="rsa">--</span></li>
+                        <li class="list-group-item d-flex justify-content-between">Illettrisme <span class="badge bg-warning text-dark" id="illettrisme">--</span></li>
+                        <li class="list-group-item d-flex justify-content-between">HLM <span class="badge bg-info text-dark" id="hlm">--</span></li>
                     </ul>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card h-100">
-                <div class="card-header">Analyse Sécurité (20 ans)</div>
-                <div class="card-body">
-                    <canvas id="secuChart"></canvas>
-                    <p class="small text-muted mt-2">Évolution des faits de délinquance constatés.</p>
-                </div>
+                <div class="card-header">Sécurité (2005-2023)</div>
+                <div class="card-body"><canvas id="secuChart"></canvas></div>
             </div>
         </div>
     </div>
 
-    <h4 class="text-secondary mb-3 mt-4"><i class="fas fa-vote-yea"></i> Analyse Électorale</h4>
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">Municipales 2020 (Tour 1)</div>
-                <div class="card-body"><canvas id="t1Chart"></canvas></div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">Municipales 2020 (Tour 2)</div>
-                <div class="card-body"><canvas id="t2Chart"></canvas></div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">Force Politique (Présidentielle 22)</div>
-                <div class="card-body"><canvas id="presChart"></canvas></div>
-            </div>
-        </div>
-    </div>
-
-    <h4 class="text-secondary mb-3 mt-4"><i class="fas fa-history"></i> Mémoire de la Ville (Longue Durée)</h4>
+    <h4 class="text-secondary mb-3 mt-4"><i class="fas fa-history"></i> Mémoire & Finances</h4>
     <div class="row">
         <div class="col-md-8">
             <div class="card">
@@ -132,86 +122,75 @@
             if(!r.ok) throw new Error();
             const data = await r.json();
 
-            // REMPLISSAGE KPI
+            // KPI
             document.getElementById('date').innerText = data.meta.last_update;
             document.getElementById('pop').innerText = data.kpi.pop;
             document.getElementById('maire').innerText = data.kpi.maire.split(' ')[1];
             document.getElementById('parti').innerText = data.kpi.parti;
             document.getElementById('pauvrete').innerText = data.diagnostic.social.taux_pauvrete;
             document.getElementById('dette').innerText = data.kpi.dette_hab;
-            document.getElementById('chomage_jeunes').innerText = data.diagnostic.social.chomage_jeunes;
+            document.getElementById('chomage').innerText = data.kpi.chomage;
             document.getElementById('entreprises').innerText = data.kpi.entreprises;
 
-            // LISTE SOCIALE
+            // SOCIAL LIST
             document.getElementById('caf').innerText = data.diagnostic.social.allocataires_caf;
             document.getElementById('rsa').innerText = data.diagnostic.social.beneficiaires_rsa;
             document.getElementById('illettrisme').innerText = data.diagnostic.education.illettrisme_jdc;
             document.getElementById('hlm').innerText = data.diagnostic.logement.parc_social;
 
-            // 1. CHART PAUVRETÉ (COMPARATIF)
+            // TABLEAU BENCHMARK
+            const benchBody = document.getElementById('benchmark-body');
+            benchBody.innerHTML = '';
+            data.benchmark.forEach(m => {
+                benchBody.innerHTML += `
+                    <tr>
+                        <td><strong>${m.periode}</strong></td>
+                        <td style="color:${m.couleur} !important; font-weight:bold;">${m.maire}</td>
+                        <td><span class="badge" style="background-color:${m.couleur}">${m.tendance}</span></td>
+                        <td>${m.dette_fin_mandat}</td>
+                        <td>${m.pop_evolution}</td>
+                        <td><small>${m.faits_marquants}</small></td>
+                    </tr>
+                `;
+            });
+
+            // CHART MACRO ELECTIONS (1983-2020)
+            new Chart(document.getElementById('macroElecChart'), {
+                type: 'line',
+                data: {
+                    labels: data.macro_elections.annees,
+                    datasets: [
+                        { label: 'Bloc Droite (Virapoullé)', data: data.macro_elections.scores_droite, borderColor: '#0d6efd', tension: 0.3 },
+                        { label: 'Bloc Gauche (PCR/Union)', data: data.macro_elections.scores_gauche, borderColor: '#dc3545', tension: 0.3 },
+                        { label: 'Participation', data: data.macro_elections.participation, borderColor: '#7f8c8d', borderDash: [5, 5], tension: 0.3 }
+                    ]
+                },
+                options: { scales: { y: { beginAtZero: false, min: 30, max: 80 } } }
+            });
+
+            // AUTRES CHARTS (Existants)
             new Chart(document.getElementById('pauvreteChart'), {
                 type: 'bar',
                 data: {
                     labels: data.diagnostic.social.comparaison_pauvrete.labels,
-                    datasets: [{
-                        label: 'Taux de Pauvreté (%)',
-                        data: data.diagnostic.social.comparaison_pauvrete.data,
-                        backgroundColor: ['#e74c3c', '#95a5a6', '#95a5a6'],
-                        borderRadius: 5
-                    }]
+                    datasets: [{ label: '%', data: data.diagnostic.social.comparaison_pauvrete.data, backgroundColor: ['#e74c3c', '#bdc3c7', '#bdc3c7'] }]
                 },
-                options: { scales: { y: { beginAtZero: true, max: 50 } }, plugins: { legend: { display: false } } }
+                options: { plugins: { legend: { display: false } } }
             });
 
-            // 2. CHART SÉCURITÉ (LONGUE DURÉE)
             new Chart(document.getElementById('secuChart'), {
                 type: 'line',
                 data: {
                     labels: data.history.annees_secu,
-                    datasets: [{
-                        label: 'Faits de Délinquance',
-                        data: data.history.faits_delinquance,
-                        borderColor: '#2c3e50',
-                        backgroundColor: 'rgba(44, 62, 80, 0.1)',
-                        fill: true, tension: 0.4
-                    }]
+                    datasets: [{ label: 'Faits Constatés', data: data.history.faits_delinquance, borderColor: '#2c3e50', fill: true, backgroundColor: 'rgba(44,62,80,0.1)' }]
                 }
             });
 
-            // 3. CHARTS POLITIQUES
-            new Chart(document.getElementById('t1Chart'), {
-                type: 'doughnut',
-                data: {
-                    labels: data.politics.municipales_2020.tour_1.candidats,
-                    datasets: [{ data: data.politics.municipales_2020.tour_1.scores, backgroundColor: data.politics.municipales_2020.tour_1.couleurs }]
-                },
-                options: { plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }
-            });
-
-            new Chart(document.getElementById('t2Chart'), {
-                type: 'pie',
-                data: {
-                    labels: data.politics.municipales_2020.tour_2.candidats,
-                    datasets: [{ data: data.politics.municipales_2020.tour_2.scores, backgroundColor: data.politics.municipales_2020.tour_2.couleurs }]
-                },
-                options: { plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }
-            });
-
-            new Chart(document.getElementById('presChart'), {
-                type: 'bar',
-                data: {
-                    labels: data.politics.presidentielle_2022.candidats,
-                    datasets: [{ label: '%', data: data.politics.presidentielle_2022.scores, backgroundColor: data.politics.presidentielle_2022.couleurs }]
-                },
-                options: { indexAxis: 'y', plugins: { legend: { display: false } } }
-            });
-
-            // 4. CHARTS HISTORIQUES
             new Chart(document.getElementById('demoChart'), {
                 type: 'line',
                 data: {
                     labels: data.history.annees_demo,
-                    datasets: [{ label: 'Habitants', data: data.history.pop, borderColor: '#3498db', fill: false, tension: 0.3 }]
+                    datasets: [{ label: 'Habitants', data: data.history.pop, borderColor: '#3498db' }]
                 }
             });
 
@@ -225,7 +204,6 @@
 
         } catch (e) {
             console.error(e);
-            alert("Les données sont en cours de génération. Attendez le voyant VERT dans GitHub Actions.");
         }
     }
     init();
