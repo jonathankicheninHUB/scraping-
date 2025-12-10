@@ -3,93 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analyse Politique Saint-André</title>
+    <title>Observatoire Complet Saint-André</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #f0f2f5; font-family: 'Segoe UI', sans-serif; }
-        .header { background: #2c3e50; color: white; padding: 2rem 0; margin-bottom: 2rem; border-bottom: 5px solid #e74c3c; }
-        .card { border: none; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 1.5rem; }
-        .card-header { background: white; border-bottom: 1px solid #eee; font-weight: bold; color: #2c3e50; }
-        .kpi-val { font-size: 2rem; font-weight: bold; }
-        .text-left { text-align: left !important; }
-        .progress { height: 25px; margin-bottom: 10px; }
+        body { background-color: #f4f6f9; font-family: 'Segoe UI', sans-serif; }
+        .header { background: #2c3e50; color: white; padding: 2rem 0; margin-bottom: 2rem; border-bottom: 4px solid #3498db; }
+        .card { border: none; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 1.5rem; }
+        .card-header { background-color: white; border-bottom: 1px solid #eee; font-weight: bold; text-transform: uppercase; color: #555; }
+        .kpi-num { font-size: 2rem; font-weight: 700; color: #2c3e50; }
+        .kpi-label { font-size: 0.9rem; color: #777; text-transform: uppercase; letter-spacing: 1px; }
     </style>
 </head>
 <body>
 
 <div class="header text-center">
-    <h1><i class="fas fa-vote-yea"></i> Analyse Électorale Saint-André</h1>
-    <p>Dynamiques de campagne, Reports de voix & Sociologie politique</p>
-    <small>Mise à jour : <span id="date">...</span></small>
+    <h1><i class="fas fa-city"></i> Observatoire Saint-André</h1>
+    <p>Politique • Finances • Démographie • Historique</p>
+    <span class="badge bg-info">Mise à jour : <span id="date">...</span></span>
 </div>
 
 <div class="container">
     
     <div class="row text-center mb-4">
-        <div class="col-md-3"><div class="card p-3"><small class="text-muted">Maire Actuel</small><div class="kpi-val" id="maire">--</div><span class="badge bg-danger" id="parti">--</span></div></div>
-        <div class="col-md-3"><div class="card p-3"><small class="text-muted">Population</small><div class="kpi-val" id="pop">--</div></div></div>
-        <div class="col-md-3"><div class="card p-3"><small class="text-muted">Dette / Hab</small><div class="kpi-val text-warning" id="dette">--</div></div></div>
-        <div class="col-md-3"><div class="card p-3"><small class="text-muted">Chômage</small><div class="kpi-val" id="chomage">--</div></div></div>
+        <div class="col-md-2"><div class="card p-3"><div class="kpi-label">Population</div><div class="kpi-num" id="pop">--</div></div></div>
+        <div class="col-md-2"><div class="card p-3"><div class="kpi-label">Maire</div><div class="kpi-num h4" id="maire">--</div><small id="parti" class="text-primary">--</small></div></div>
+        <div class="col-md-2"><div class="card p-3"><div class="kpi-label">Dette/Hab</div><div class="kpi-num text-danger" id="dette">--</div></div></div>
+        <div class="col-md-2"><div class="card p-3"><div class="kpi-label">Impôt Foncier</div><div class="kpi-num text-warning" id="impot">--</div></div></div>
+        <div class="col-md-2"><div class="card p-3"><div class="kpi-label">Chômage</div><div class="kpi-num" id="chomage">--</div></div></div>
+        <div class="col-md-2"><div class="card p-3"><div class="kpi-label">Entreprises</div><div class="kpi-num h4" id="entreprises">--</div></div></div>
     </div>
 
-    <h4 class="mb-3 text-uppercase fw-bold text-secondary"><i class="fas fa-chess"></i> La Mécanique de la Victoire (2020)</h4>
+    <h4 class="text-secondary mb-3"><i class="fas fa-vote-yea"></i> Analyse Politique</h4>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="card h-100">
-                <div class="card-header">1er Tour : L'Éparpillement</div>
-                <div class="card-body">
-                    <canvas id="t1Chart"></canvas>
-                    <p class="mt-3 small text-muted">Au 1er tour, J.M. Virapoullé (Droite) était en tête (31%). La gauche était divisée entre Bédier (24%) et Fruteau (17%).</p>
-                </div>
+                <div class="card-header">Municipales 2020 (Tour 1)</div>
+                <div class="card-body"><canvas id="t1Chart"></canvas></div>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="card h-100">
-                <div class="card-header">2nd Tour : L'Alliance Décisive</div>
-                <div class="card-body">
-                    <canvas id="t2Chart"></canvas>
-                    <div class="alert alert-info mt-3 small">
-                        <i class="fas fa-info-circle"></i> <strong>Analyse :</strong> La fusion des listes Bédier + Fruteau a créé une dynamique majoritaire (52%), renversant l'avance de la droite.
-                    </div>
-                </div>
+                <div class="card-header">Municipales 2020 (Tour 2)</div>
+                <div class="card-body"><canvas id="t2Chart"></canvas></div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header">Présidentielle 2022 (St-André)</div>
+                <div class="card-body"><canvas id="presChart"></canvas></div>
             </div>
         </div>
     </div>
 
-    <h4 class="mb-3 mt-4 text-uppercase fw-bold text-secondary"><i class="fas fa-globe-europe"></i> Le Poids Politique Réel</h4>
+    <h4 class="text-secondary mb-3 mt-4"><i class="fas fa-history"></i> Historique & Finances</h4>
     <div class="row">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Présidentielle 2022 à Saint-André (1er Tour)</div>
-                <div class="card-body">
-                    <p class="small text-muted mb-3">Ce graphique montre l'orientation politique profonde des habitants, hors enjeux de personnes locales.</p>
-                    <canvas id="presChart" height="150"></canvas>
-                </div>
+                <div class="card-header">Explosion Démographique (1968-2022)</div>
+                <div class="card-body"><canvas id="demoChart" height="100"></canvas></div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card">
-                <div class="card-header">Évolution Participation</div>
-                <div class="card-body">
-                    <canvas id="abstentionChart"></canvas>
-                    <p class="small text-muted mt-2 text-center">Le réservoir de voix (Abstention)</p>
-                </div>
+                <div class="card-header">Évolution Dette (€/hab)</div>
+                <div class="card-body"><canvas id="detteChart"></canvas></div>
             </div>
         </div>
     </div>
-    
-    <div class="row mt-2">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">Contexte : Évolution de la Dette (Le Bilan)</div>
-                <div class="card-body">
-                     <canvas id="detteChart" height="80"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -100,89 +81,64 @@
             if(!r.ok) throw new Error();
             const data = await r.json();
 
-            // KPI
+            // REMPLISSAGE KPI
             document.getElementById('date').innerText = data.meta.last_update;
-            document.getElementById('maire').innerText = data.kpi.maire.split(' ')[1]; // Juste le nom
-            document.getElementById('parti').innerText = data.kpi.parti_maire;
             document.getElementById('pop').innerText = data.kpi.pop;
-            document.getElementById('dette').innerText = data.kpi.dette;
+            document.getElementById('maire').innerText = data.kpi.maire.split(' ')[1];
+            document.getElementById('parti').innerText = data.kpi.parti;
+            document.getElementById('dette').innerText = data.kpi.dette_hab;
+            document.getElementById('impot').innerText = data.finance.foncier_bati;
             document.getElementById('chomage').innerText = data.kpi.chomage;
+            document.getElementById('entreprises').innerText = data.kpi.entreprises;
 
-            // CHART 1: MUNICIPALES T1
+            // GRAPHIQUES POLITIQUES
             new Chart(document.getElementById('t1Chart'), {
                 type: 'doughnut',
                 data: {
                     labels: data.politics.municipales_2020.tour_1.candidats,
-                    datasets: [{
-                        data: data.politics.municipales_2020.tour_1.scores,
-                        backgroundColor: data.politics.municipales_2020.tour_1.couleurs
-                    }]
+                    datasets: [{ data: data.politics.municipales_2020.tour_1.scores, backgroundColor: data.politics.municipales_2020.tour_1.couleurs }]
                 },
-                options: { plugins: { legend: { position: 'bottom' } } }
+                options: { plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } }
             });
 
-            // CHART 2: MUNICIPALES T2
             new Chart(document.getElementById('t2Chart'), {
                 type: 'pie',
                 data: {
                     labels: data.politics.municipales_2020.tour_2.candidats,
-                    datasets: [{
-                        data: data.politics.municipales_2020.tour_2.scores,
-                        backgroundColor: data.politics.municipales_2020.tour_2.couleurs
-                    }]
+                    datasets: [{ data: data.politics.municipales_2020.tour_2.scores, backgroundColor: data.politics.municipales_2020.tour_2.couleurs }]
                 },
-                options: { plugins: { legend: { position: 'bottom' } } }
+                options: { plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } }
             });
 
-            // CHART 3: PRESIDENTIELLE (Barre horizontale pour comparer les forces)
             new Chart(document.getElementById('presChart'), {
                 type: 'bar',
                 data: {
-                    labels: data.politics.presidentielle_2022_t1.candidats,
-                    datasets: [{
-                        label: '% des voix',
-                        data: data.politics.presidentielle_2022_t1.scores,
-                        backgroundColor: data.politics.presidentielle_2022_t1.couleurs,
-                        borderRadius: 5
-                    }]
+                    labels: data.politics.presidentielle_2022.candidats,
+                    datasets: [{ label: '%', data: data.politics.presidentielle_2022.scores, backgroundColor: data.politics.presidentielle_2022.couleurs }]
                 },
-                options: { indexAxis: 'y', scales: { x: { beginAtZero: true, max: 60 } } }
+                options: { indexAxis: 'y', plugins: { legend: { display: false } } }
             });
 
-            // CHART 4: PARTICIPATION (Jauge)
-            const partT1 = data.politics.municipales_2020.tour_1.participation;
-            const partT2 = data.politics.municipales_2020.tour_2.participation;
-            new Chart(document.getElementById('abstentionChart'), {
-                type: 'bar',
+            // GRAPHIQUES HISTORIQUES
+            new Chart(document.getElementById('demoChart'), {
+                type: 'line',
                 data: {
-                    labels: ['Tour 1', 'Tour 2'],
-                    datasets: [{
-                        label: 'Participation %',
-                        data: [partT1, partT2],
-                        backgroundColor: ['#6c757d', '#198754']
-                    }]
-                },
-                options: { scales: { y: { beginAtZero: true, max: 100 } } }
+                    labels: data.history.annees_demo,
+                    datasets: [{ label: 'Habitants', data: data.history.pop, borderColor: '#3498db', backgroundColor: 'rgba(52, 152, 219, 0.1)', fill: true, tension: 0.4 }]
+                }
             });
-            
-            // CHART 5: DETTE HISTORIQUE
+
             new Chart(document.getElementById('detteChart'), {
                 type: 'line',
                 data: {
-                    labels: data.history.annees_dette,
-                    datasets: [{
-                        label: 'Dette €/hab',
-                        data: data.history.dette,
-                        borderColor: '#e74c3c',
-                        tension: 0.3,
-                        fill: false
-                    }]
+                    labels: data.history.annees_fin,
+                    datasets: [{ label: 'Dette €', data: data.history.dette, borderColor: '#e74c3c', tension: 0.2 }]
                 }
             });
 
         } catch (e) {
-            console.log(e);
-            alert("Erreur données.");
+            console.error(e);
+            alert("Erreur: Les données ne sont pas encore générées. Vérifiez l'action GitHub.");
         }
     }
     init();
