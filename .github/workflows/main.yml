@@ -1,35 +1,33 @@
-name: Data Scraping & Audit
+name: Debug Data Pipeline
 
 on:
-  schedule:
-    - cron: '0 6 * * 1' # Tous les lundis 6h
-  workflow_dispatch: # Bouton manuel
+  workflow_dispatch: # Lancement manuel uniquement pour tester
 
 jobs:
-  build:
+  debug-job:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write # INDISPENSABLE
 
     steps:
-      - name: Checkout Code
+      - name: 1. Récupération du code
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: 2. Installation Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
 
-      - name: Install Dependencies
+      - name: 3. Installation des librairies
         run: |
           python -m pip install --upgrade pip
-          pip install requests beautifulsoup4 pandas
+          pip install requests beautifulsoup4
 
-      - name: Run Scraper & Audit
+      - name: 4. Lancement du Script d'Audit
         run: python update_data.py
 
-      - name: Save Data
+      - name: 5. Sauvegarde et Commit
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Data Audit Update"
+          commit_message: "Debug Log Update"
           file_pattern: data.json
