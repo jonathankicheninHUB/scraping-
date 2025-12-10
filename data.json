@@ -4,206 +4,108 @@
   },
   "kpi": {
     "pop": "57 546",
-    "entreprises": "10 000",
-    "participation": "62.74",
-    "maire": "Joé BÉDIER"
+    "maire": "Joé BÉDIER",
+    "parti_maire": "DVG (Gauche)",
+    "dette": "1 140 €",
+    "chomage": "29 %",
+    "entreprises": "10 000"
+  },
+  "politics": {
+    "municipales_2020": {
+      "tour_1": {
+        "participation": 46.5,
+        "candidats": [
+          "J.M. VIRAPOULLÉ (DVD)",
+          "Joé BÉDIER (DVG)",
+          "Eric FRUTEAU (PCR)",
+          "J-F. RAMASSAMY",
+          "Sylvie MOUTOUCOMORAPOULE"
+        ],
+        "scores": [
+          31.47,
+          24.94,
+          17.56,
+          4.35,
+          3.42
+        ],
+        "couleurs": [
+          "#0d6efd",
+          "#dc3545",
+          "#b30000",
+          "#ffc107",
+          "#6f42c1"
+        ]
+      },
+      "tour_2": {
+        "participation": 62.74,
+        "candidats": [
+          "Joé BÉDIER (Union Gauche)",
+          "J.M. VIRAPOULLÉ (Divers Droite)"
+        ],
+        "scores": [
+          52.04,
+          47.96
+        ],
+        "couleurs": [
+          "#dc3545",
+          "#0d6efd"
+        ]
+      },
+      "analyse": "Victoire due à l'union des gauches (Bédier + Fruteau) au 2nd tour face à la droite divisée."
+    },
+    "presidentielle_2022_t1": {
+      "contexte": "Vote de la ville à la Présidentielle (Contexte idéologique)",
+      "candidats": [
+        "J.L. MÉLENCHON",
+        "M. LE PEN",
+        "E. MACRON",
+        "E. ZEMMOUR",
+        "V. PÉCRESSE"
+      ],
+      "scores": [
+        51.5,
+        23.4,
+        14.2,
+        3.1,
+        1.8
+      ],
+      "couleurs": [
+        "#cc2443",
+        "#002e61",
+        "#ffeb00",
+        "#5c3c16",
+        "#0066cc"
+      ]
+    }
   },
   "history": {
-    "demo": {
-      "annees": [
-        1968,
-        1975,
-        1982,
-        1990,
-        1999,
-        2006,
-        2011,
-        2016,
-        2022
-      ],
-      "population": [
-        22094,
-        25231,
-        30075,
-        35049,
-        43174,
-        51817,
-        55090,
-        56268,
-        57546
-      ]
-    },
-    "finance": {
-      "annees": [
-        2013,
-        2014,
-        2015,
-        2016,
-        2017,
-        2018,
-        2019,
-        2020,
-        2021,
-        2022,
-        2023
-      ],
-      "dette_par_hab": [
-        1350,
-        1400,
-        1380,
-        1320,
-        1250,
-        1180,
-        1100,
-        1120,
-        1150,
-        1180,
-        1140
-      ],
-      "taux_foncier": [
-        28.5,
-        29.0,
-        31.5,
-        33.0,
-        35.5,
-        36.0,
-        36.5,
-        37.0,
-        38.0,
-        38.5,
-        38.5
-      ]
-    },
-    "chomage": {
-      "annees": [
-        2008,
-        2010,
-        2012,
-        2014,
-        2016,
-        2018,
-        2019,
-        2020,
-        2021,
-        2022,
-        2023
-      ],
-      "taux": [
-        38.0,
-        36.5,
-        35.0,
-        34.2,
-        33.5,
-        32.0,
-        31.5,
-        31.0,
-        30.0,
-        29.2,
-        28.8
-      ]
-    },
-    "secu": {
-      "annees": [
-        2016,
-        2017,
-        2018,
-        2019,
-        2020,
-        2021,
-        2022,
-        2023
-      ],
-      "cambriolages": [
-        260,
-        250,
-        220,
-        198,
-        160,
-        175,
-        185,
-        182
-      ]
-    }
-  },
-  "elections": {
-    "2020": {
-      "type": "Municipales 2020 (2nd Tour)",
-      "participation": 62.74,
-      "labels": [
-        "Joé BÉDIER (Union Gauche)",
-        "J-Marie VIRAPOULLÉ (Divers Droite)"
-      ],
-      "pourcentages": [
-        52.04,
-        47.96
-      ],
-      "sieges": [
-        30,
-        9
-      ]
-    },
-    "2014": {
-      "type": "Municipales 2014 (2nd Tour)",
-      "participation": 70.38,
-      "labels": [
-        "Jean-Paul VIRAPOULLÉ (Union Droite)",
-        "Joé BÉDIER (Divers Gauche)"
-      ],
-      "pourcentages": [
-        51.58,
-        48.42
-      ],
-      "sieges": [
-        31,
-        8
-      ]
-    },
-    "2008": {
-      "type": "Municipales 2008 (2nd Tour)",
-      "participation": 73.5,
-      "labels": [
-        "Eric FRUTEAU (PCR)",
-        "J-Paul VIRAPOULLÉ (UMP)"
-      ],
-      "pourcentages": [
-        53.2,
-        46.8
-      ],
-      "sieges": [
-        30,
-        9
-      ]
-    }
-  },
-  "finance_current": {
-    "taux_foncier_bati": 38.5,
-    "taux_foncier_non_bati": 45.2,
-    "taux_habitation_sec": 22.5,
-    "dette_par_habitant": 1140
-  },
-  "social_current": {
-    "revenu_median": 14500,
-    "diplomes_sup_pct": 18.5,
-    "logements_sociaux_pct": 35.0
-  },
-  "elus": [
-    {
-      "nom": "BÉDIER Joé",
-      "fonction": "Maire",
-      "groupe": "Majorité",
-      "mandat": "2020-2026"
-    },
-    {
-      "nom": "VIRAPOULLÉ J-Marie",
-      "fonction": "Conseiller",
-      "groupe": "Opposition",
-      "mandat": "2020-2026"
-    },
-    {
-      "nom": "PAYET Marie",
-      "fonction": "1ère Adjointe",
-      "groupe": "Majorité",
-      "mandat": "2020-2026"
-    }
-  ]
+    "annees_demo": [
+      1990,
+      1999,
+      2011,
+      2016,
+      2022
+    ],
+    "pop": [
+      35049,
+      43174,
+      55090,
+      56268,
+      57546
+    ],
+    "annees_dette": [
+      2016,
+      2018,
+      2020,
+      2022,
+      2023
+    ],
+    "dette": [
+      1320,
+      1180,
+      1120,
+      1180,
+      1140
+    ]
+  }
 }
