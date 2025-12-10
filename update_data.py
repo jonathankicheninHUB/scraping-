@@ -3,10 +3,18 @@ import datetime
 import requests
 
 # --- CONFIGURATION SAINT-ANDRÉ (97440) ---
-CODE_INSEE = "97411" # Code officiel INSEE de St André (La Réunion)
+CODE_INSEE = "97411" # Le vrai code de Saint-André
 CODE_POSTAL = "97440"
 
-# --- 1. DONNÉES ÉLECTORALES (OFFICIELLES 2020 - 2nd TOUR) ---
+# --- 1. DONNÉES DÉMOGRAPHIQUES (OFFICIELLES 2022) ---
+# Intégration de vos données pour garantir la précision
+REAL_DEMO_2022 = {
+    "population": 57546,
+    "densite": 1084.3,
+    "variation_annuelle": 0.6
+}
+
+# --- 2. DONNÉES ÉLECTORALES (OFFICIELLES 2020 - 2nd TOUR) ---
 REAL_ELECTION_2020 = {
     "type": "Municipales 2020 (2nd Tour)",
     "participation": 62.74,
@@ -15,22 +23,7 @@ REAL_ELECTION_2020 = {
     "sieges": [30, 9] 
 }
 
-# --- 2. FONCTIONS API (LIVE DATA) ---
-
-def get_demographics():
-    """Récupère Population et Surface via geo.api.gouv.fr"""
-    url = f"https://geo.api.gouv.fr/communes/{CODE_INSEE}?fields=nom,population,surface&format=json"
-    print(f"📡 Récupération Démographie...")
-    try:
-        r = requests.get(url, timeout=5)
-        data = r.json()
-        return {
-            "pop": data.get("population", 57000),
-            "surface": data.get("surface", 0)
-        }
-    except Exception as e:
-        print(f"❌ Erreur API Géo: {e}")
-        return {"pop": 57150, "surface": 5307}
+# --- 3. FONCTIONS API (LIVE DATA pour l'économie) ---
 
 def get_economy_stats():
     """Récupère le nombre d'entreprises actives via recherche-entreprises.api.gouv.fr"""
@@ -44,23 +37,24 @@ def get_economy_stats():
         return total
     except Exception as e:
         print(f"❌ Erreur API Entreprises: {e}")
-        return 5000
+        return 5000 
 
-# --- 3. ORCHESTRATION ---
+# --- 4. ORCHESTRATION ---
 
 def main():
     now = datetime.datetime.now().strftime("%d/%m/%Y à %H:%M")
     
-    demo = get_demographics()
+    # Live Data
     nb_entreprises = get_economy_stats()
     
+    # Construction du JSON final
     output = {
         "meta": {
             "last_update": now,
-            "source": "Ministère Intérieur, API Géo, API Sirene"
+            "source": "INSEE 2022 (Vos données), Ministère Intérieur, API Sirene"
         },
         "kpi": {
-            "pop": f"{demo['pop']:,}".replace(",", " "),
+            "pop": f"{REAL_DEMO_2022['population']:,}".replace(",", " "), # Utilise votre chiffre précis 57 546
             "entreprises": f"{nb_entreprises:,}".replace(",", " "),
             "participation": str(REAL_ELECTION_2020["participation"]),
             "maire": "Joé BÉDIER" 
@@ -72,9 +66,9 @@ def main():
             "sieges": REAL_ELECTION_2020["sieges"]
         },
         "socio_eco": {
-            "annees": [2019, 2020, 2021, 2022, 2023],
-            "chomage": [32.0, 31.5, 30.0, 29.2, 28.8], 
-            "cambriolages": [198, 160, 175, 185, 182] 
+            "annees": [2019, 2020, 2021, 2022],
+            "chomage": [32.0, 31.5, 30.0, 29.2], 
+            "cambriolages": [198, 160, 175, 185]
         },
         "elus": [
             {"nom": "BÉDIER Joé", "fonction": "Maire", "groupe": "Majorité (DVG)", "mandat": "2020-2026"},
@@ -87,7 +81,7 @@ def main():
     with open('data.json', 'w', encoding='utf-8') as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
     
-    print("🚀 Données Saint-André mises à jour avec succès !")
+    print("🚀 Données Saint-André mises à jour avec votre population 2022 intégrée !")
 
 if __name__ == "__main__":
     main()
