@@ -1,67 +1,25 @@
 {
   "meta": {
-    "last_update": "10/12/2025 04:02 UTC",
-    "status": "LIVE CONNECTED",
-    "audit": "Données récupérées via API Gouv"
+    "status": "COMPLETED",
+    "last_run": "10/12/2025 04:25"
   },
-  "kpi": {
-    "population": {
-      "valeur": "156 149",
-      "label": "Population Légale",
-      "source": "API Géo (INSEE)"
+  "audit_logs": [
+    {
+      "source": "Internet",
+      "status": "OK",
+      "details": "Connexion sortante fonctionnelle"
     },
-    "economie": {
-      "valeur": "10 000",
-      "label": "Entreprises Actives",
-      "source": "API Sirene (INSEE)"
+    {
+      "source": "Wikipedia",
+      "status": "OK",
+      "details": "Page trouvée : Saint-André (La Réunion) — Wikipédia"
     },
-    "social": {
-      "qpv": "3 Zones QPV Actives",
-      "zones": [
-        "Fayard",
-        "La Cressonnière",
-        "Cambuston"
-      ],
-      "source": "SIG Ville (Politique de la Ville)"
+    {
+      "source": "API Géo",
+      "status": "OK",
+      "details": "Population récupérée : 156149"
     }
-  },
-  "archives": {
-    "politique": {
-      "source": "Ministère de l'Intérieur (Archives Résultats)",
-      "data": {
-        "2020": {
-          "vainqueur": "J. BÉDIER",
-          "score": 52.04
-        },
-        "2014": {
-          "vainqueur": "J.P. VIRAPOULLÉ",
-          "score": 51.58
-        },
-        "2008": {
-          "vainqueur": "E. FRUTEAU",
-          "score": 53.2
-        }
-      }
-    },
-    "note": "Les données électorales 1983-2020 sont des archives numérisées, non issues d'une API temps réel."
-  },
-  "charts": {
-    "dette": {
-      "source": "Comptes Administratifs (DGFiP)",
-      "annees": [
-        2018,
-        2019,
-        2020,
-        2021,
-        2022
-      ],
-      "valeurs": [
-        1180,
-        1100,
-        1120,
-        1150,
-        1140
-      ]
-    }
-  }
+  ],
+  "wikipedia_raw": "Infobox trouvée",
+  "population_live": 156149
 }
