@@ -4,144 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SAINT-ANDRÉ | STRATEGIC INTEL</title>
-    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        :root {
-            --bg-dark: #0f172a;
-            --panel-bg: rgba(30, 41, 59, 0.95);
-            --text-main: #e2e8f0;
-            --text-muted: #94a3b8;
-            --accent-blue: #3b82f6;
-            --accent-red: #ef4444;
-            --accent-green: #10b981;
-            --accent-orange: #f59e0b;
-        }
-
-        body { 
-            background-color: var(--bg-dark); 
-            color: var(--text-main); 
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            overflow: hidden; /* Pour faire "App" et pas "Site web" */
-            height: 100vh;
-            margin: 0;
-        }
-
-        /* LAYOUT */
-        .wrapper { display: flex; height: 100vh; width: 100%; }
+        :root { --bg-dark: #0f172a; --text-main: #e2e8f0; --accent: #3b82f6; }
+        body { background-color: var(--bg-dark); color: var(--text-main); font-family: 'Segoe UI', sans-serif; height: 100vh; overflow: hidden; margin: 0; }
+        .wrapper { display: flex; height: 100vh; }
         
-        /* SIDEBAR GAUCHE */
-        .sidebar {
-            width: 350px;
-            background-color: var(--bg-dark);
-            border-right: 1px solid #334155;
-            display: flex;
-            flex-direction: column;
-            padding: 0;
-            z-index: 1000;
-            overflow-y: auto;
-        }
-
-        .brand {
-            padding: 1.5rem;
-            border-bottom: 1px solid #334155;
-            background: linear-gradient(90deg, #1e293b 0%, #0f172a 100%);
-        }
-        .brand h5 { margin: 0; font-weight: 800; letter-spacing: 1px; }
-        .brand span { font-size: 0.8rem; color: var(--accent-blue); text-transform: uppercase; }
-
-        /* TABS NAVIGATION */
-        .nav-tabs { border-bottom: 1px solid #334155; }
-        .nav-link { 
-            color: var(--text-muted); 
-            border: none; 
-            border-radius: 0; 
-            padding: 1rem;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-        }
-        .nav-link.active { 
-            background-color: transparent; 
-            color: var(--accent-blue); 
-            border-bottom: 2px solid var(--accent-blue); 
-        }
-        .nav-link:hover { color: var(--text-main); }
-
-        /* KPI CARDS DANS SIDEBAR */
-        .kpi-grid { padding: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .kpi-box {
-            background-color: #1e293b;
-            padding: 10px;
-            border-radius: 4px;
-            border-left: 3px solid var(--accent-blue);
-        }
-        .kpi-box.danger { border-left-color: var(--accent-red); }
-        .kpi-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; display: block; }
-        .kpi-value { font-size: 1.2rem; font-weight: bold; color: white; }
-
-        .analysis-block { padding: 1.5rem; border-bottom: 1px solid #334155; }
-        .analysis-title { font-size: 0.85rem; text-transform: uppercase; color: var(--accent-blue); font-weight: bold; margin-bottom: 10px; }
-        .analysis-text { font-size: 0.9rem; line-height: 1.5; color: #cbd5e1; }
-
-        /* SECTEURS STRATEGIQUES */
-        .sector-item {
-            padding: 10px 15px;
-            border-left: 3px solid transparent;
-            margin-bottom: 5px;
-            background: rgba(255,255,255,0.03);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .sector-item:hover { background: rgba(255,255,255,0.05); }
-        .sector-red { border-left-color: var(--accent-red); }
-        .sector-orange { border-left-color: var(--accent-orange); }
-        .sector-green { border-left-color: var(--accent-green); }
+        /* SIDEBAR */
+        .sidebar { width: 380px; background: #1e293b; border-right: 1px solid #334155; overflow-y: auto; display: flex; flex-direction: column; }
+        .brand { padding: 1.5rem; background: #0f172a; border-bottom: 1px solid #334155; }
+        .kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; }
+        .kpi-box { background: #334155; padding: 10px; border-radius: 4px; border-left: 3px solid var(--accent); }
+        .kpi-val { font-size: 1.2rem; font-weight: bold; }
+        .kpi-lbl { font-size: 0.7rem; text-transform: uppercase; color: #94a3b8; }
         
-        .sector-name { font-weight: bold; font-size: 0.95rem; display: block; }
-        .sector-desc { font-size: 0.75rem; color: var(--text-muted); }
-
-        /* CARTE CENTRALE */
-        .map-container { flex-grow: 1; position: relative; background-color: #000; }
-        #map { height: 100%; width: 100%; filter: grayscale(20%) contrast(1.1); } /* Look sombre */
-
-        /* OVERLAYS FLOTTANTS SUR LA CARTE */
-        .floating-panel {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 300px;
-            background-color: var(--panel-bg);
-            backdrop-filter: blur(5px);
-            border-radius: 8px;
-            border: 1px solid #475569;
-            z-index: 1000;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            padding: 15px;
-        }
+        /* BENCHMARK TABLE */
+        .bench-table { font-size: 0.8rem; width: 100%; color: #cbd5e1; }
+        .bench-table th { text-align: left; color: #64748b; padding: 5px; }
+        .bench-table td { padding: 8px 5px; border-bottom: 1px solid #334155; }
         
-        .floating-stat {
-            position: absolute;
-            bottom: 30px;
-            left: 380px; /* Decalé de la sidebar */
-            background-color: var(--panel-bg);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 50px;
-            z-index: 1000;
-            border: 1px solid var(--accent-blue);
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
-            font-weight: bold;
-        }
-
-        /* CUSTOM SCROLLBAR */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg-dark); }
-        ::-webkit-scrollbar-thumb { background: #475569; }
-
-        .update-badge { font-size: 0.7rem; float: right; opacity: 0.6; margin-top: 5px; }
+        /* MAP */
+        .map-container { flex: 1; position: relative; }
+        #map { height: 100%; width: 100%; filter: grayscale(20%) contrast(1.1); }
+        
+        /* FLOATING PANELS */
+        .float-panel { position: absolute; top: 20px; right: 20px; width: 320px; background: rgba(30,41,59,0.95); padding: 15px; border-radius: 8px; z-index: 999; border: 1px solid #475569; backdrop-filter: blur(5px); }
+        .chart-box { height: 120px; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -149,193 +40,137 @@
 <div class="wrapper">
     <div class="sidebar">
         <div class="brand">
-            <h5>SAINT-ANDRÉ <span class="badge bg-primary">97440</span></h5>
-            <span>Rapport d'Intelligence Stratégique</span>
-            <div class="update-badge" id="last-update">...</div>
+            <h5 class="m-0 fw-bold">SAINT-ANDRÉ <span class="badge bg-primary">97440</span></h5>
+            <small class="text-muted">Intelligence Territoriale</small>
+            <div style="font-size:0.7rem; float:right; margin-top:5px;" id="last-update">...</div>
         </div>
 
         <div class="kpi-grid">
-            <div class="kpi-box danger">
-                <span class="kpi-label">Alerte Pauvreté</span>
-                <span class="kpi-value" id="kpi-pauvrete">--</span>
+            <div class="kpi-box">
+                <div class="kpi-lbl">Population</div>
+                <div class="kpi-val" id="pop">--</div>
+            </div>
+            <div class="kpi-box" style="border-color:#ef4444;">
+                <div class="kpi-lbl">Pauvreté</div>
+                <div class="kpi-val text-danger" id="pauvrete">--</div>
             </div>
             <div class="kpi-box">
-                <span class="kpi-label">Population</span>
-                <span class="kpi-value" id="kpi-pop">--</span>
+                <div class="kpi-lbl">Dette/Hab</div>
+                <div class="kpi-val text-warning" id="dette">--</div>
             </div>
             <div class="kpi-box">
-                <span class="kpi-label">Maire (Majorité)</span>
-                <span class="kpi-value" id="kpi-maire" style="font-size:1rem;">--</span>
-            </div>
-            <div class="kpi-box">
-                <span class="kpi-label">Dette / Hab</span>
-                <span class="kpi-value text-warning" id="kpi-dette">--</span>
+                <div class="kpi-lbl">Entreprises</div>
+                <div class="kpi-val" id="entreprises">--</div>
             </div>
         </div>
 
-        <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
-            <li class="nav-item"><button class="nav-link active">Synthèse</button></li>
-            <li class="nav-item"><button class="nav-link">Politique</button></li>
-        </ul>
-
-        <div class="analysis-block">
-            <div class="analysis-title"><i class="fas fa-layer-group"></i> Analyse Morphologique</div>
-            <p class="analysis-text">
-                Saint-André agit comme un "verrou" de l'Est. La ville est fragmentée entre le 
-                <strong class="text-white">Centre-Ville</strong> (pouvoir historique) et les 
-                <strong class="text-white">Écarts</strong> (Fayard, Cambuston).
-                <br><br>
-                <span class="text-warning">Enjeu Critique :</span> Le basculement des quartiers périphériques, 
-                autrefois fiefs de droite, vers une abstention massive ou un vote contestataire.
-            </p>
+        <div class="p-3 border-top border-secondary">
+            <h6 class="text-uppercase text-primary mb-3" style="font-size:0.8rem; font-weight:bold;">
+                <i class="fas fa-history"></i> Benchmark des Mandats
+            </h6>
+            <table class="bench-table">
+                <thead><tr><th>Période</th><th>Maire</th><th>Dette Fin</th></tr></thead>
+                <tbody id="bench-body"></tbody>
+            </table>
         </div>
 
-        <div class="analysis-block" style="border:none;">
-            <div class="analysis-title"><i class="fas fa-map-marker-alt"></i> Secteurs Stratégiques (QPV)</div>
-            
-            <div class="sector-item sector-red" onclick="flyToLoc(-20.942, 55.665, 'Fayard')">
-                <span class="sector-name">Fayard / Petit Bazar</span>
-                <span class="sector-desc">Zone de tension maximale • Forte précarité</span>
-            </div>
-            
-            <div class="sector-item sector-orange" onclick="flyToLoc(-20.950, 55.635, 'Cambuston')">
-                <span class="sector-name">Cambuston</span>
-                <span class="sector-desc">Quartier Pivot • Bascule Droite → RN/LFI</span>
-            </div>
-            
-            <div class="sector-item sector-green" onclick="flyToLoc(-20.970, 55.655, 'La Cressonnière')">
-                <span class="sector-name">La Cressonnière</span>
-                <span class="sector-desc">Enclavement • Rénovation Urbaine</span>
-            </div>
-        </div>
-        
-        <div class="p-3">
-             <div class="analysis-title">Historique Politique</div>
-             <canvas id="miniChart" height="150"></canvas>
+        <div class="p-3 border-top border-secondary">
+            <h6 class="text-uppercase text-primary mb-2" style="font-size:0.8rem; font-weight:bold;">
+                Trajectoire Démographique
+            </h6>
+            <canvas id="demoChart" height="100"></canvas>
         </div>
     </div>
 
     <div class="map-container">
         <div id="map"></div>
-        
-        <div class="floating-panel">
-            <h6 class="text-uppercase text-muted mb-3" style="font-size:0.75rem; letter-spacing:1px;">Données Clés</h6>
+
+        <div class="float-panel">
+            <h6 class="text-uppercase text-light mb-3" style="font-size:0.8rem;">Diagnostic Stratégique</h6>
             
-            <div class="mb-3">
-                <div class="d-flex justify-content-between mb-1">
-                    <span style="font-size:0.8rem">Chômage des Jeunes</span>
-                    <span class="text-danger fw-bold" id="float-chomage">--%</span>
-                </div>
-                <div class="progress" style="height: 4px; background:#334155;">
-                    <div class="progress-bar bg-danger" id="bar-chomage" style="width: 0%"></div>
-                </div>
+            <div class="d-flex justify-content-between mb-2">
+                <span style="font-size:0.9rem;">Chômage Jeunes</span>
+                <span class="fw-bold text-danger" id="chomage">--</span>
+            </div>
+            <div class="progress mb-3" style="height:4px; background:#334155;">
+                <div class="progress-bar bg-danger" style="width:48%"></div>
             </div>
 
-            <div class="mb-3">
-                <div class="d-flex justify-content-between mb-1">
-                    <span style="font-size:0.8rem">Illettrisme (JDC)</span>
-                    <span class="text-warning fw-bold" id="float-illettrisme">--%</span>
-                </div>
-                <div class="progress" style="height: 4px; background:#334155;">
-                    <div class="progress-bar bg-warning" id="bar-illettrisme" style="width: 0%"></div>
-                </div>
+            <div class="d-flex justify-content-between mb-2">
+                <span style="font-size:0.9rem;">Illettrisme (JDC)</span>
+                <span class="fw-bold text-warning" id="illettrisme">--</span>
             </div>
-            
-            <hr style="border-color:#475569">
-            
-            <div class="d-flex align-items-center">
-                <div style="width: 40px; height: 40px; background: var(--accent-blue); border-radius: 50%; display:flex; align-items:center; justify-content:center; margin-right:10px;">
-                    <i class="fas fa-vote-yea text-white"></i>
-                </div>
-                <div>
-                    <div style="font-size:0.7rem; color:#94a3b8;">Dernière Élection (2020)</div>
-                    <div style="font-weight:bold; font-size:0.9rem;">Victoire J. Bédier (52%)</div>
-                </div>
+            <div class="progress mb-3" style="height:4px; background:#334155;">
+                <div class="progress-bar bg-warning" style="width:22%"></div>
             </div>
-        </div>
 
-        <div class="floating-stat">
-            <i class="fas fa-building me-2"></i> <span id="float-entreprises">--</span> Entreprises Actives
+            <hr class="border-secondary">
+            
+            <h6 class="text-uppercase text-light mb-2" style="font-size:0.8rem;">Sécurité (2015-2023)</h6>
+            <div class="chart-box">
+                <canvas id="secuChart"></canvas>
+            </div>
         </div>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
 <script>
-    let map;
+    // 1. CARTE
+    const map = L.map('map', {zoomControl: false}).setView([-20.9606, 55.6495], 13);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; CartoDB', maxZoom: 19
+    }).addTo(map);
 
-    // 1. INITIALISATION DE LA CARTE (Leaflet)
-    function initMap() {
-        // Coordonnées Saint-André Réunion
-        map = L.map('map', {zoomControl: false}).setView([-20.9606, 55.6495], 13);
+    // MARQUEURS STRATEGIQUES
+    const points = [
+        {lat: -20.942, lng: 55.665, color: '#ef4444', label: 'Fayard (QPV)'},
+        {lat: -20.950, lng: 55.635, color: '#f59e0b', label: 'Cambuston'},
+        {lat: -20.9606, lng: 55.6495, color: '#3b82f6', label: 'Mairie'}
+    ];
+    points.forEach(p => {
+        L.circleMarker([p.lat, p.lng], {
+            radius: 8, fillColor: p.color, color: "#fff", weight: 2, fillOpacity: 1
+        }).addTo(map).bindPopup(p.label);
+    });
 
-        // Fond de carte "Sombre" (CartoDB Dark Matter)
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; OpenStreetMap &copy; CartoDB',
-            subdomains: 'abcd',
-            maxZoom: 19
-        }).addTo(map);
-
-        // Ajout des marqueurs (Fayard, Cambuston...)
-        const iconRed = createIcon('#ef4444');
-        const iconOrange = createIcon('#f59e0b');
-        const iconGreen = createIcon('#10b981');
-
-        L.marker([-20.942, 55.665], {icon: iconRed}).addTo(map).bindPopup("<b>Fayard</b><br>Quartier Prioritaire");
-        L.marker([-20.950, 55.635], {icon: iconOrange}).addTo(map).bindPopup("<b>Cambuston</b><br>Zone Pivot");
-        L.marker([-20.970, 55.655], {icon: iconGreen}).addTo(map).bindPopup("<b>La Cressonnière</b><br>Rénovation");
-        
-        // Mairie
-        L.marker([-20.9606, 55.6495]).addTo(map).bindPopup("<b>Hôtel de Ville</b><br>Centre Décisionnel");
-    }
-
-    function createIcon(color) {
-        return L.divIcon({
-            className: 'custom-div-icon',
-            html: `<div style="background-color:${color}; width:12px; height:12px; border-radius:50%; border:2px solid white; box-shadow:0 0 10px ${color};"></div>`,
-            iconSize: [12, 12],
-            iconAnchor: [6, 6]
-        });
-    }
-
-    function flyToLoc(lat, lng, name) {
-        map.flyTo([lat, lng], 15, { duration: 1.5 });
-    }
-
-    // 2. CHARGEMENT DES DONNÉES JSON
-    async function loadData() {
+    // 2. DONNÉES
+    async function load() {
         try {
             const r = await fetch('data.json');
-            if(!r.ok) throw new Error("Erreur JSON");
+            if(!r.ok) throw new Error();
             const data = await r.json();
 
-            // KPI Gauche
-            document.getElementById('last-update').innerText = "MAJ: " + data.meta.last_update;
-            document.getElementById('kpi-pop').innerText = data.kpi.pop;
-            document.getElementById('kpi-maire').innerText = data.kpi.maire.split(' ')[1]; // Nom seulement
-            document.getElementById('kpi-pauvrete').innerText = data.diagnostic.social.taux_pauvrete;
-            document.getElementById('kpi-dette').innerText = data.kpi.dette_hab;
-
-            // Panneau Droit & Bas
-            document.getElementById('float-chomage').innerText = data.diagnostic.social.chomage_jeunes;
-            document.getElementById('bar-chomage').style.width = data.diagnostic.social.chomage_jeunes;
+            // KPI
+            document.getElementById('last-update').innerText = data.meta.last_update;
+            document.getElementById('pop').innerText = data.kpi.pop;
+            document.getElementById('pauvrete').innerText = data.kpi.pauvrete;
+            document.getElementById('dette').innerText = data.kpi.dette;
+            document.getElementById('entreprises').innerText = data.kpi.entreprises;
             
-            document.getElementById('float-illettrisme').innerText = data.diagnostic.education.illettrisme_jdc;
-            document.getElementById('bar-illettrisme').style.width = data.diagnostic.education.illettrisme_jdc;
+            document.getElementById('chomage').innerText = data.diagnostic.social.chomage_jeunes;
+            document.getElementById('illettrisme').innerText = data.diagnostic.social.illettrisme;
 
-            document.getElementById('float-entreprises').innerText = data.kpi.entreprises;
+            // BENCHMARK TABLE
+            const tbody = document.getElementById('bench-body');
+            tbody.innerHTML = '';
+            data.benchmark.forEach(b => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><span class="badge" style="background:${b.color}">${b.periode}</span></td>
+                        <td class="fw-bold text-light">${b.maire}</td>
+                        <td class="text-end">${b.dette_fin}</td>
+                    </tr>`;
+            });
 
-            // Mini Chart (Historique Démographique)
-            const ctx = document.getElementById('miniChart').getContext('2d');
-            new Chart(ctx, {
+            // CHART DEMO
+            new Chart(document.getElementById('demoChart'), {
                 type: 'line',
                 data: {
                     labels: data.history.annees_demo,
                     datasets: [{
-                        label: 'Population',
+                        label: 'Habitants',
                         data: data.history.pop,
                         borderColor: '#3b82f6',
                         borderWidth: 2,
@@ -343,25 +178,27 @@
                         tension: 0.4
                     }]
                 },
-                options: {
-                    plugins: { legend: { display: false } },
-                    scales: { 
-                        x: { display: false }, 
-                        y: { display: false } 
-                    },
-                    maintainAspectRatio: false
-                }
+                options: { plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } }, maintainAspectRatio: false }
             });
 
-        } catch (e) {
-            console.error("Erreur Data:", e);
-        }
+            // CHART SECU
+            new Chart(document.getElementById('secuChart'), {
+                type: 'bar',
+                data: {
+                    labels: data.history.annees_secu,
+                    datasets: [{
+                        label: 'Faits',
+                        data: data.history.faits,
+                        backgroundColor: '#64748b',
+                        borderRadius: 3
+                    }]
+                },
+                options: { plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } }, maintainAspectRatio: false }
+            });
+
+        } catch (e) { console.error(e); }
     }
-
-    // Lancement
-    initMap();
-    loadData();
-
+    load();
 </script>
 </body>
 </html>
