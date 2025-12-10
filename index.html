@@ -3,202 +3,373 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SAINT-ANDRÉ | STRATEGIC INTEL</title>
+    <title>Observatoire Saint-André | Dashboard 360°</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        :root { --bg-dark: #0f172a; --text-main: #e2e8f0; --accent: #3b82f6; }
-        body { background-color: var(--bg-dark); color: var(--text-main); font-family: 'Segoe UI', sans-serif; height: 100vh; overflow: hidden; margin: 0; }
-        .wrapper { display: flex; height: 100vh; }
+        :root {
+            --primary: #2563eb;       /* Bleu moderne */
+            --secondary: #64748b;     /* Gris texte */
+            --bg-body: #f1f5f9;       /* Fond très clair */
+            --surface: #ffffff;       /* Blanc pur */
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            font-family: 'Inter', sans-serif;
+            color: #1e293b;
+            padding-bottom: 50px;
+        }
+
+        /* HEADER */
+        .top-bar {
+            background: var(--surface);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .app-title { font-weight: 800; font-size: 1.5rem; letter-spacing: -0.5px; color: #0f172a; }
+        .badge-update { background: #dbeafe; color: #1e40af; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+
+        /* CARDS */
+        .card-custom {
+            background: var(--surface);
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            padding: 1.5rem;
+            height: 100%;
+            transition: transform 0.2s ease;
+        }
+        .card-custom:hover { transform: translateY(-2px); }
         
-        /* SIDEBAR */
-        .sidebar { width: 380px; background: #1e293b; border-right: 1px solid #334155; overflow-y: auto; display: flex; flex-direction: column; }
-        .brand { padding: 1.5rem; background: #0f172a; border-bottom: 1px solid #334155; }
-        .kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; }
-        .kpi-box { background: #334155; padding: 10px; border-radius: 4px; border-left: 3px solid var(--accent); }
-        .kpi-val { font-size: 1.2rem; font-weight: bold; }
-        .kpi-lbl { font-size: 0.7rem; text-transform: uppercase; color: #94a3b8; }
-        
-        /* BENCHMARK TABLE */
-        .bench-table { font-size: 0.8rem; width: 100%; color: #cbd5e1; }
-        .bench-table th { text-align: left; color: #64748b; padding: 5px; }
-        .bench-table td { padding: 8px 5px; border-bottom: 1px solid #334155; }
-        
-        /* MAP */
-        .map-container { flex: 1; position: relative; }
-        #map { height: 100%; width: 100%; filter: grayscale(20%) contrast(1.1); }
-        
-        /* FLOATING PANELS */
-        .float-panel { position: absolute; top: 20px; right: 20px; width: 320px; background: rgba(30,41,59,0.95); padding: 15px; border-radius: 8px; z-index: 999; border: 1px solid #475569; backdrop-filter: blur(5px); }
-        .chart-box { height: 120px; margin-top: 10px; }
+        .kpi-label { font-size: 0.85rem; text-transform: uppercase; color: var(--secondary); font-weight: 600; letter-spacing: 0.5px; margin-bottom: 0.5rem; }
+        .kpi-value { font-size: 2rem; font-weight: 800; color: #0f172a; line-height: 1; }
+        .kpi-sub { font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500; }
+
+        /* TABS */
+        .nav-pills .nav-link {
+            color: var(--secondary);
+            font-weight: 600;
+            margin-right: 10px;
+            border-radius: 8px;
+            padding: 10px 20px;
+        }
+        .nav-pills .nav-link.active {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3);
+        }
+
+        /* TABLES */
+        .table-modern { width: 100%; }
+        .table-modern thead th { 
+            text-transform: uppercase; 
+            font-size: 0.75rem; 
+            color: var(--secondary); 
+            padding-bottom: 10px; 
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .table-modern td { padding: 15px 0; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+        .mayor-badge { padding: 5px 10px; border-radius: 6px; font-weight: bold; font-size: 0.85rem; color: white; }
+
+        /* PROGRESS BARS */
+        .progress-label { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.9rem; font-weight: 600; }
+        .custom-progress { height: 8px; border-radius: 4px; background-color: #e2e8f0; margin-bottom: 15px; }
+
+        /* CHART CONTAINERS */
+        .chart-wrapper { position: relative; height: 250px; width: 100%; }
+        .chart-wrapper-lg { position: relative; height: 350px; width: 100%; }
+        .section-title { font-size: 1.1rem; font-weight: 700; color: #334155; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; }
     </style>
 </head>
 <body>
 
-<div class="wrapper">
-    <div class="sidebar">
-        <div class="brand">
-            <h5 class="m-0 fw-bold">SAINT-ANDRÉ <span class="badge bg-primary">97440</span></h5>
-            <small class="text-muted">Intelligence Territoriale</small>
-            <div style="font-size:0.7rem; float:right; margin-top:5px;" id="last-update">...</div>
+    <div class="top-bar">
+        <div class="app-title"><i class="fas fa-layer-group text-primary"></i> SAINT-ANDRÉ 360°</div>
+        <div class="badge-update" id="last-update">Mise à jour : Chargement...</div>
+    </div>
+
+    <div class="container">
+        
+        <div class="row g-4 mb-5">
+            <div class="col-md-3">
+                <div class="card-custom">
+                    <div class="kpi-label">Population</div>
+                    <div class="kpi-value" id="kpi-pop">--</div>
+                    <div class="kpi-sub text-success"><i class="fas fa-arrow-up"></i> Croissance continue</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card-custom">
+                    <div class="kpi-label">Pauvreté</div>
+                    <div class="kpi-value text-danger" id="kpi-pauvrete">--</div>
+                    <div class="kpi-sub text-muted">Moyenne Réunion: 37%</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card-custom">
+                    <div class="kpi-label">Maire Actuel</div>
+                    <div class="kpi-value h3 mb-0" id="kpi-maire" style="font-size: 1.5rem;">--</div>
+                    <div class="kpi-sub text-primary fw-bold" id="kpi-parti">--</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card-custom">
+                    <div class="kpi-label">Dette / Habitant</div>
+                    <div class="kpi-value text-warning" id="kpi-dette">--</div>
+                    <div class="kpi-sub text-muted">Budget Principal</div>
+                </div>
+            </div>
         </div>
 
-        <div class="kpi-grid">
-            <div class="kpi-box">
-                <div class="kpi-lbl">Population</div>
-                <div class="kpi-val" id="pop">--</div>
-            </div>
-            <div class="kpi-box" style="border-color:#ef4444;">
-                <div class="kpi-lbl">Pauvreté</div>
-                <div class="kpi-val text-danger" id="pauvrete">--</div>
-            </div>
-            <div class="kpi-box">
-                <div class="kpi-lbl">Dette/Hab</div>
-                <div class="kpi-val text-warning" id="dette">--</div>
-            </div>
-            <div class="kpi-box">
-                <div class="kpi-lbl">Entreprises</div>
-                <div class="kpi-val" id="entreprises">--</div>
-            </div>
-        </div>
+        <ul class="nav nav-pills mb-4" id="pills-tab" role="tablist">
+            <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#pills-politique">🏛️ Politique & Benchmark</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-social">❤️ Social & Sécurité</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-histoire">📈 Histoire & Finances</button></li>
+        </ul>
 
-        <div class="p-3 border-top border-secondary">
-            <h6 class="text-uppercase text-primary mb-3" style="font-size:0.8rem; font-weight:bold;">
-                <i class="fas fa-history"></i> Benchmark des Mandats
-            </h6>
-            <table class="bench-table">
-                <thead><tr><th>Période</th><th>Maire</th><th>Dette Fin</th></tr></thead>
-                <tbody id="bench-body"></tbody>
-            </table>
-        </div>
+        <div class="tab-content" id="pills-tabContent">
+            
+            <div class="tab-pane fade show active" id="pills-politique">
+                <div class="row g-4">
+                    <div class="col-12">
+                        <div class="card-custom">
+                            <div class="section-title"><i class="fas fa-balance-scale"></i> Benchmark des Mandats (1972-2024)</div>
+                            <table class="table-modern">
+                                <thead>
+                                    <tr>
+                                        <th>Période</th>
+                                        <th>Maire</th>
+                                        <th>Orientation</th>
+                                        <th>Dette Fin Mandat</th>
+                                        <th>Evolution Pop.</th>
+                                        <th>Marqueur Gestion</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="bench-body">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
 
-        <div class="p-3 border-top border-secondary">
-            <h6 class="text-uppercase text-primary mb-2" style="font-size:0.8rem; font-weight:bold;">
-                Trajectoire Démographique
-            </h6>
-            <canvas id="demoChart" height="100"></canvas>
+                    <div class="col-md-4">
+                        <div class="card-custom">
+                            <div class="section-title">Municipales 2020 (Tour 1)</div>
+                            <div class="chart-wrapper"><canvas id="t1Chart"></canvas></div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card-custom">
+                            <div class="section-title">Municipales 2020 (Tour 2)</div>
+                            <div class="chart-wrapper"><canvas id="t2Chart"></canvas></div>
+                            <div class="alert alert-light mt-3 small border">
+                                <strong>Analyse :</strong> Victoire via fusion des listes Gauche (Bédier + Fruteau).
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card-custom">
+                            <div class="section-title">Présidentielle 2022</div>
+                            <div class="chart-wrapper"><canvas id="presChart"></canvas></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="pills-social">
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="card-custom">
+                            <div class="section-title">Indicateurs de Précarité</div>
+                            
+                            <div class="progress-label"><span>Chômage des Jeunes</span> <span class="text-danger" id="val-chomage">--</span></div>
+                            <div class="progress custom-progress"><div class="progress-bar bg-danger" style="width: 48%"></div></div>
+
+                            <div class="progress-label"><span>Illettrisme (JDC)</span> <span class="text-warning" id="val-illettrisme">--</span></div>
+                            <div class="progress custom-progress"><div class="progress-bar bg-warning" style="width: 22%"></div></div>
+
+                            <div class="mt-4">
+                                <div class="d-flex justify-content-between border-bottom py-2">
+                                    <span>Allocataires CAF</span>
+                                    <span class="fw-bold" id="val-caf">--</span>
+                                </div>
+                                <div class="d-flex justify-content-between border-bottom py-2">
+                                    <span>Bénéficiaires RSA</span>
+                                    <span class="fw-bold text-danger" id="val-rsa">--</span>
+                                </div>
+                                <div class="d-flex justify-content-between py-2">
+                                    <span>Logements Sociaux</span>
+                                    <span class="fw-bold text-info" id="val-hlm">--</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-8">
+                        <div class="card-custom">
+                            <div class="section-title">Évolution de la Sécurité (20 ans)</div>
+                            <div class="chart-wrapper-lg"><canvas id="secuChart"></canvas></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="pills-histoire">
+                <div class="row g-4">
+                    <div class="col-md-8">
+                        <div class="card-custom">
+                            <div class="section-title">Explosion Démographique (1968-2022)</div>
+                            <div class="chart-wrapper-lg"><canvas id="demoChart"></canvas></div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card-custom">
+                            <div class="section-title">Évolution Dette (10 ans)</div>
+                            <div class="chart-wrapper-lg"><canvas id="detteChart"></canvas></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
-    <div class="map-container">
-        <div id="map"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-        <div class="float-panel">
-            <h6 class="text-uppercase text-light mb-3" style="font-size:0.8rem;">Diagnostic Stratégique</h6>
-            
-            <div class="d-flex justify-content-between mb-2">
-                <span style="font-size:0.9rem;">Chômage Jeunes</span>
-                <span class="fw-bold text-danger" id="chomage">--</span>
-            </div>
-            <div class="progress mb-3" style="height:4px; background:#334155;">
-                <div class="progress-bar bg-danger" style="width:48%"></div>
-            </div>
+    <script>
+        async function loadDashboard() {
+            try {
+                // 1. Fetch Data
+                const r = await fetch('data.json');
+                if(!r.ok) throw new Error("Erreur JSON");
+                const data = await r.json();
 
-            <div class="d-flex justify-content-between mb-2">
-                <span style="font-size:0.9rem;">Illettrisme (JDC)</span>
-                <span class="fw-bold text-warning" id="illettrisme">--</span>
-            </div>
-            <div class="progress mb-3" style="height:4px; background:#334155;">
-                <div class="progress-bar bg-warning" style="width:22%"></div>
-            </div>
+                // 2. Populate KPIs
+                document.getElementById('last-update').innerText = "Mise à jour : " + data.meta.last_update;
+                document.getElementById('kpi-pop').innerText = data.kpi.pop;
+                document.getElementById('kpi-pauvrete').innerText = data.diagnostic.social.pauvrete;
+                document.getElementById('kpi-maire').innerText = data.kpi.maire.split(' ')[1];
+                document.getElementById('kpi-parti').innerText = data.kpi.parti;
+                document.getElementById('kpi-dette').innerText = data.kpi.dette_hab;
 
-            <hr class="border-secondary">
-            
-            <h6 class="text-uppercase text-light mb-2" style="font-size:0.8rem;">Sécurité (2015-2023)</h6>
-            <div class="chart-box">
-                <canvas id="secuChart"></canvas>
-            </div>
-        </div>
-    </div>
-</div>
+                // 3. Populate Social Text
+                document.getElementById('val-chomage').innerText = data.diagnostic.social.chomage_jeunes;
+                document.getElementById('val-illettrisme').innerText = data.diagnostic.social.illettrisme;
+                document.getElementById('val-caf').innerText = data.diagnostic.social.allocataires_caf;
+                document.getElementById('val-rsa').innerText = data.diagnostic.social.beneficiaires_rsa;
+                document.getElementById('val-hlm').innerText = data.diagnostic.logement.parc_social;
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script>
-    // 1. CARTE
-    const map = L.map('map', {zoomControl: false}).setView([-20.9606, 55.6495], 13);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; CartoDB', maxZoom: 19
-    }).addTo(map);
+                // 4. Build Benchmark Table
+                const tbody = document.getElementById('bench-body');
+                tbody.innerHTML = '';
+                data.benchmark.forEach(b => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><strong>${b.periode}</strong></td>
+                            <td><span class="mayor-badge" style="background:${b.color}">${b.maire}</span></td>
+                            <td class="text-muted small">${b.parti}</td>
+                            <td class="fw-bold">${b.dette_fin}</td>
+                            <td>${b.pop_evo}</td>
+                            <td><span class="badge bg-light text-dark border">${b.style}</span></td>
+                        </tr>
+                    `;
+                });
 
-    // MARQUEURS STRATEGIQUES
-    const points = [
-        {lat: -20.942, lng: 55.665, color: '#ef4444', label: 'Fayard (QPV)'},
-        {lat: -20.950, lng: 55.635, color: '#f59e0b', label: 'Cambuston'},
-        {lat: -20.9606, lng: 55.6495, color: '#3b82f6', label: 'Mairie'}
-    ];
-    points.forEach(p => {
-        L.circleMarker([p.lat, p.lng], {
-            radius: 8, fillColor: p.color, color: "#fff", weight: 2, fillOpacity: 1
-        }).addTo(map).bindPopup(p.label);
-    });
+                // 5. Charts Configuration
+                
+                // Politique
+                new Chart(document.getElementById('t1Chart'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: data.politics.municipales_2020.tour_1.candidats,
+                        datasets: [{ data: data.politics.municipales_2020.tour_1.scores, backgroundColor: data.politics.municipales_2020.tour_1.couleurs }]
+                    },
+                    options: { plugins: { legend: { position: 'bottom', labels: { boxWidth: 10 } } }, maintainAspectRatio: false }
+                });
 
-    // 2. DONNÉES
-    async function load() {
-        try {
-            const r = await fetch('data.json');
-            if(!r.ok) throw new Error();
-            const data = await r.json();
+                new Chart(document.getElementById('t2Chart'), {
+                    type: 'pie',
+                    data: {
+                        labels: data.politics.municipales_2020.tour_2.candidats,
+                        datasets: [{ data: data.politics.municipales_2020.tour_2.scores, backgroundColor: data.politics.municipales_2020.tour_2.couleurs }]
+                    },
+                    options: { plugins: { legend: { position: 'bottom', labels: { boxWidth: 10 } } }, maintainAspectRatio: false }
+                });
 
-            // KPI
-            document.getElementById('last-update').innerText = data.meta.last_update;
-            document.getElementById('pop').innerText = data.kpi.pop;
-            document.getElementById('pauvrete').innerText = data.kpi.pauvrete;
-            document.getElementById('dette').innerText = data.kpi.dette;
-            document.getElementById('entreprises').innerText = data.kpi.entreprises;
-            
-            document.getElementById('chomage').innerText = data.diagnostic.social.chomage_jeunes;
-            document.getElementById('illettrisme').innerText = data.diagnostic.social.illettrisme;
+                new Chart(document.getElementById('presChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: data.politics.presidentielle_2022.candidats,
+                        datasets: [{ label: '% Voix', data: data.politics.presidentielle_2022.scores, backgroundColor: data.politics.presidentielle_2022.couleurs, borderRadius: 5 }]
+                    },
+                    options: { indexAxis: 'y', plugins: { legend: { display: false } }, maintainAspectRatio: false }
+                });
 
-            // BENCHMARK TABLE
-            const tbody = document.getElementById('bench-body');
-            tbody.innerHTML = '';
-            data.benchmark.forEach(b => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td><span class="badge" style="background:${b.color}">${b.periode}</span></td>
-                        <td class="fw-bold text-light">${b.maire}</td>
-                        <td class="text-end">${b.dette_fin}</td>
-                    </tr>`;
-            });
+                // Sécurité
+                new Chart(document.getElementById('secuChart'), {
+                    type: 'line',
+                    data: {
+                        labels: data.history.annees_secu,
+                        datasets: [{ 
+                            label: 'Faits Constatés', 
+                            data: data.history.faits_delinquance, 
+                            borderColor: '#334155', 
+                            backgroundColor: 'rgba(51, 65, 85, 0.1)', 
+                            fill: true, 
+                            tension: 0.4 
+                        }]
+                    },
+                    options: { maintainAspectRatio: false }
+                });
 
-            // CHART DEMO
-            new Chart(document.getElementById('demoChart'), {
-                type: 'line',
-                data: {
-                    labels: data.history.annees_demo,
-                    datasets: [{
-                        label: 'Habitants',
-                        data: data.history.pop,
-                        borderColor: '#3b82f6',
-                        borderWidth: 2,
-                        pointRadius: 0,
-                        tension: 0.4
-                    }]
-                },
-                options: { plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } }, maintainAspectRatio: false }
-            });
+                // Histoire
+                new Chart(document.getElementById('demoChart'), {
+                    type: 'line',
+                    data: {
+                        labels: data.history.annees_demo,
+                        datasets: [{ 
+                            label: 'Population', 
+                            data: data.history.pop, 
+                            borderColor: '#2563eb', 
+                            pointBackgroundColor: '#fff',
+                            borderWidth: 3
+                        }]
+                    },
+                    options: { maintainAspectRatio: false }
+                });
 
-            // CHART SECU
-            new Chart(document.getElementById('secuChart'), {
-                type: 'bar',
-                data: {
-                    labels: data.history.annees_secu,
-                    datasets: [{
-                        label: 'Faits',
-                        data: data.history.faits,
-                        backgroundColor: '#64748b',
-                        borderRadius: 3
-                    }]
-                },
-                options: { plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } }, maintainAspectRatio: false }
-            });
+                new Chart(document.getElementById('detteChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: data.history.annees_fin,
+                        datasets: [{ 
+                            label: 'Dette €', 
+                            data: data.history.dette, 
+                            backgroundColor: '#f59e0b',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: { maintainAspectRatio: false }
+                });
 
-        } catch (e) { console.error(e); }
-    }
-    load();
-</script>
+            } catch (e) {
+                console.error(e);
+                // Fail silently or show alert
+            }
+        }
+
+        loadDashboard();
+    </script>
 </body>
 </html>
