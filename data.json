@@ -1,20 +1,17 @@
 {
   "meta": {
-    "last_update": "10/12/2025 02:42",
-    "version": "WAR_ROOM_V3"
+    "last_update": "10/12/2025 03:04"
   },
   "kpi_global": {
-    "pop": "58 000",
+    "pop": "57 546",
     "entreprises": "10 000",
-    "dette": 1140,
+    "dette": "1 140 €",
     "pauvrete": "42 %"
   },
   "politique": {
     "kpi_maire": {
       "nom": "Joé BÉDIER",
-      "parti": "DVG (Gauche)",
-      "mandat": "2020 - 2026",
-      "score_victoire": "52.04 %"
+      "parti": "DVG (Gauche)"
     },
     "macro_tendances": {
       "annees": [
@@ -43,23 +40,13 @@
         53.2,
         48.4,
         52.0
-      ],
-      "abstention": [
-        21.5,
-        23.5,
-        25.8,
-        27.2,
-        26.5,
-        29.6,
-        37.3
       ]
     },
     "details_scrutins": {
       "2020": {
-        "type": "Municipales 2020 (2nd Tour)",
         "candidats": [
-          "Joé BÉDIER (Union Gauche)",
-          "J.M. VIRAPOULLÉ (Droite)"
+          "J. BÉDIER",
+          "J.M. VIRAPOULLÉ"
         ],
         "scores": [
           52.04,
@@ -69,13 +56,12 @@
           "#e74c3c",
           "#3498db"
         ],
-        "analyse": "Alliance Bédier/Fruteau décisive. Basculement des quartiers Fayard/Cambuston."
+        "analyse": "Victoire Gauche Unie"
       },
       "2014": {
-        "type": "Municipales 2014 (2nd Tour)",
         "candidats": [
-          "J.P. VIRAPOULLÉ (UDI)",
-          "Joé BÉDIER (DVG)"
+          "J.P. VIRAPOULLÉ",
+          "J. BÉDIER"
         ],
         "scores": [
           51.58,
@@ -85,13 +71,12 @@
           "#3498db",
           "#e74c3c"
         ],
-        "analyse": "Retour de J.P. Virapoullé après la parenthèse Fruteau."
+        "analyse": "Victoire Droite"
       },
       "2008": {
-        "type": "Municipales 2008 (2nd Tour)",
         "candidats": [
-          "Eric FRUTEAU (PCR)",
-          "J.P. VIRAPOULLÉ (UMP)"
+          "E. FRUTEAU",
+          "J.P. VIRAPOULLÉ"
         ],
         "scores": [
           53.2,
@@ -101,7 +86,7 @@
           "#c0392b",
           "#3498db"
         ],
-        "analyse": "Fin de 30 ans de règne Virapoullé. Victoire historique du PCR."
+        "analyse": "Basculement PCR"
       }
     },
     "benchmark_maires": [
@@ -109,8 +94,8 @@
         "periode": "2020-...",
         "nom": "J. BÉDIER",
         "bord": "Gauche",
-        "dette_fin": "1140 € (Est.)",
-        "style": "Social / Proximité",
+        "dette_fin": "1140 €",
+        "style": "Social",
         "color": "#e74c3c"
       },
       {
@@ -118,7 +103,7 @@
         "nom": "J.P. VIRAPOULLÉ",
         "bord": "Droite",
         "dette_fin": "1120 €",
-        "style": "Grands Travaux (Colosse)",
+        "style": "Bâtisseur",
         "color": "#3498db"
       },
       {
@@ -126,16 +111,8 @@
         "nom": "E. FRUTEAU",
         "bord": "PCR",
         "dette_fin": "1410 €",
-        "style": "Structuration / Écoles",
+        "style": "Éducation",
         "color": "#c0392b"
-      },
-      {
-        "periode": "1972-2008",
-        "nom": "J.P. VIRAPOULLÉ",
-        "bord": "Droite",
-        "dette_fin": "Variable",
-        "style": "Bâtisseur / Sucre",
-        "color": "#2980b9"
       }
     ]
   },
@@ -143,40 +120,26 @@
     "demographie_historique": {
       "annees": [
         1968,
-        1975,
         1982,
-        1990,
         1999,
-        2009,
-        2014,
-        2020,
-        2024
+        2010,
+        2015,
+        2022
       ],
       "population": [
         22094,
-        25231,
         30075,
-        35049,
         43174,
         53290,
-        55090,
-        57150,
-        58000
+        56000,
+        57546
       ]
     },
     "indicateurs_precarite": {
-      "taux_pauvrete": "42 %",
+      "chomage_jeunes": "48 %",
       "allocataires_caf": "16 800",
       "beneficiaires_rsa": "5 400",
-      "chomage_jeunes": "48 %",
-      "comparaison_region": [
-        42,
-        37
-      ]
-    },
-    "education": {
-      "illettrisme_jdc": "22.5 %",
-      "sans_diplome": "39 %"
+      "illettrisme_jdc": "22.5 %"
     }
   },
   "regalien": {
@@ -217,10 +180,6 @@
         1150,
         1140
       ]
-    },
-    "impots_2023": {
-      "foncier_bati": "38.50 %",
-      "foncier_non_bati": "45.20 %"
     }
   }
 }
