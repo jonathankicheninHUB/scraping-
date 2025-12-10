@@ -129,27 +129,23 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <script>
-        // Fonction principale asynchrone
         async function loadDashboard() {
             try {
-                // 1. Connexion au fichier JSON généré par Python
                 const response = await fetch('data.json');
                 if (!response.ok) throw new Error("Fichier data.json introuvable");
                 
                 const data = await response.json();
 
-                // --- 2. REMPLISSAGE DES KPI ---
+                // 2. REMPLISSAGE DES KPI
                 document.getElementById('last-update').innerText = data.meta.last_update;
-                
                 document.getElementById('kpi-pop').innerText = data.kpi.pop;
                 document.getElementById('kpi-entreprises').innerText = data.kpi.entreprises;
                 document.getElementById('kpi-participation').innerText = data.kpi.participation + '%';
                 document.getElementById('kpi-maire').innerText = data.kpi.maire;
 
-                // --- 3. GRAPHIQUES ---
+                // 3. GRAPHIQUES
                 document.getElementById('election-title').innerText = `Résultats ${data.elections.titre}`;
 
-                // Graphique Elections (Barres)
                 new Chart(document.getElementById('electionChart'), {
                     type: 'bar',
                     data: {
@@ -168,7 +164,6 @@
                     }
                 });
 
-                // Graphique Sièges (Anneau)
                 new Chart(document.getElementById('siegeChart'), {
                     type: 'doughnut',
                     data: {
@@ -180,7 +175,6 @@
                     }
                 });
 
-                // Graphique Sécurité (Ligne)
                 new Chart(document.getElementById('secuChart'), {
                     type: 'line',
                     data: {
@@ -195,7 +189,6 @@
                     options: { responsive: true }
                 });
 
-                // Graphique Chômage (Ligne remplie)
                 new Chart(document.getElementById('socioChart'), {
                     type: 'line',
                     data: {
@@ -211,7 +204,7 @@
                     }
                 });
 
-                // --- 4. TABLEAU DES ÉLUS ---
+                // 4. TABLEAU DES ÉLUS
                 const tableBody = document.getElementById('elus-table-body');
                 tableBody.innerHTML = ""; 
                 data.elus.forEach(elu => {
