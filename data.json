@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_update": "10/12/2025 à 00:55"
+    "last_update": "10/12/2025"
   },
   "kpi": {
     "pop": "57 546",
@@ -8,91 +8,180 @@
     "participation": "62.74",
     "maire": "Joé BÉDIER"
   },
-  "demographie_historique": {
-    "annees": [
-      1990,
-      1999,
-      2010,
-      2015,
-      2022
-    ],
-    "population": [
-      35000,
-      43000,
-      52000,
-      55000,
-      57546
-    ]
+  "history": {
+    "demo": {
+      "annees": [
+        1968,
+        1975,
+        1982,
+        1990,
+        1999,
+        2006,
+        2011,
+        2016,
+        2022
+      ],
+      "population": [
+        22094,
+        25231,
+        30075,
+        35049,
+        43174,
+        51817,
+        55090,
+        56268,
+        57546
+      ]
+    },
+    "finance": {
+      "annees": [
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023
+      ],
+      "dette_par_hab": [
+        1350,
+        1400,
+        1380,
+        1320,
+        1250,
+        1180,
+        1100,
+        1120,
+        1150,
+        1180,
+        1140
+      ],
+      "taux_foncier": [
+        28.5,
+        29.0,
+        31.5,
+        33.0,
+        35.5,
+        36.0,
+        36.5,
+        37.0,
+        38.0,
+        38.5,
+        38.5
+      ]
+    },
+    "chomage": {
+      "annees": [
+        2008,
+        2010,
+        2012,
+        2014,
+        2016,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023
+      ],
+      "taux": [
+        38.0,
+        36.5,
+        35.0,
+        34.2,
+        33.5,
+        32.0,
+        31.5,
+        31.0,
+        30.0,
+        29.2,
+        28.8
+      ]
+    },
+    "secu": {
+      "annees": [
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023
+      ],
+      "cambriolages": [
+        260,
+        250,
+        220,
+        198,
+        160,
+        175,
+        185,
+        182
+      ]
+    }
   },
-  "elections_2014": {
-    "type": "Municipales 2014 (2nd Tour)",
-    "participation": 70.38,
-    "labels": [
-      "Jean-Paul VIRAPOULLÉ (Union Droite)",
-      "Joé BÉDIER (Divers Gauche)"
-    ],
-    "pourcentages": [
-      51.58,
-      48.42
-    ],
-    "sieges": [
-      31,
-      8
-    ]
+  "elections": {
+    "2020": {
+      "type": "Municipales 2020 (2nd Tour)",
+      "participation": 62.74,
+      "labels": [
+        "Joé BÉDIER (Union Gauche)",
+        "J-Marie VIRAPOULLÉ (Divers Droite)"
+      ],
+      "pourcentages": [
+        52.04,
+        47.96
+      ],
+      "sieges": [
+        30,
+        9
+      ]
+    },
+    "2014": {
+      "type": "Municipales 2014 (2nd Tour)",
+      "participation": 70.38,
+      "labels": [
+        "Jean-Paul VIRAPOULLÉ (Union Droite)",
+        "Joé BÉDIER (Divers Gauche)"
+      ],
+      "pourcentages": [
+        51.58,
+        48.42
+      ],
+      "sieges": [
+        31,
+        8
+      ]
+    },
+    "2008": {
+      "type": "Municipales 2008 (2nd Tour)",
+      "participation": 73.5,
+      "labels": [
+        "Eric FRUTEAU (PCR)",
+        "J-Paul VIRAPOULLÉ (UMP)"
+      ],
+      "pourcentages": [
+        53.2,
+        46.8
+      ],
+      "sieges": [
+        30,
+        9
+      ]
+    }
   },
-  "elections_2020": {
-    "type": "Municipales 2020 (2nd Tour)",
-    "participation": 62.74,
-    "labels": [
-      "Joé BÉDIER (Union Gauche)",
-      "J-Marie VIRAPOULLÉ (Divers Droite)"
-    ],
-    "pourcentages": [
-      52.04,
-      47.96
-    ],
-    "sieges": [
-      30,
-      9
-    ]
+  "finance_current": {
+    "taux_foncier_bati": 38.5,
+    "taux_foncier_non_bati": 45.2,
+    "taux_habitation_sec": 22.5,
+    "dette_par_habitant": 1140
   },
-  "socio_eco": {
-    "annees_chomage": [
-      2010,
-      2015,
-      2019,
-      2020,
-      2021,
-      2022,
-      2023
-    ],
-    "chomage": [
-      35.0,
-      31.8,
-      32.0,
-      31.5,
-      30.0,
-      29.2,
-      28.8
-    ],
-    "annees_secu": [
-      2017,
-      2018,
-      2019,
-      2020,
-      2021,
-      2022,
-      2023
-    ],
-    "cambriolages": [
-      250,
-      220,
-      198,
-      160,
-      175,
-      185,
-      182
-    ],
+  "social_current": {
     "revenu_median": 14500,
     "diplomes_sup_pct": 18.5,
     "logements_sociaux_pct": 35.0
