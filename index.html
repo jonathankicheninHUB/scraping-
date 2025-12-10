@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Observatoire Saint-André (97440)</title>
+    <title>Observatoire Saint-André (97440) - Historique</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -28,7 +28,7 @@
     <div class="dashboard-header text-center">
         <div class="container">
             <h1 class="display-5 fw-bold"><i class="fas fa-chart-line"></i> Observatoire Saint-André</h1>
-            <p class="lead">Données officielles : Démographie, Économie et Élections (97440)</p>
+            <p class="lead">Données : Démographie, Économie, Social et **Historique** (97440)</p>
             <span class="badge bg-light text-primary">Mise à jour : <span id="last-update">Chargement...</span></span>
         </div>
     </div>
@@ -40,7 +40,7 @@
                 <div class="stat-card position-relative">
                     <h6 class="text-muted text-uppercase">Population (INSEE)</h6>
                     <h2 class="fw-bold" id="kpi-pop">--</h2>
-                    <p class="text-success small mb-0"><i class="fas fa-check-circle"></i> Officiel État</p>
+                    <p class="text-success small mb-0"><i class="fas fa-check-circle"></i> Officiel 2022</p>
                     <i class="fas fa-users stat-icon"></i>
                 </div>
             </div>
@@ -54,10 +54,10 @@
             </div>
             <div class="col-md-3">
                 <div class="stat-card position-relative">
-                    <h6 class="text-muted text-uppercase">Participation (2020)</h6>
-                    <h2 class="fw-bold" id="kpi-participation">--%</h2>
-                    <p class="text-muted small mb-0">Municipales 2nd Tour</p>
-                    <i class="fas fa-vote-yea stat-icon"></i>
+                    <h6 class="text-muted text-uppercase">Revenu Médian (Annuel)</h6>
+                    <h2 class="fw-bold" id="kpi-revenu">--€</h2>
+                    <p class="text-success small mb-0"><i class="fas fa-euro-sign"></i> Par unité de conso.</p>
+                    <i class="fas fa-wallet stat-icon"></i>
                 </div>
             </div>
             <div class="col-md-3">
@@ -70,10 +70,21 @@
             </div>
         </div>
 
+        <div class="row mb-4">
+             <div class="col-12">
+                <div class="chart-container">
+                    <h5 class="mb-4"><i class="fas fa-chart-area"></i> Évolution Démographique (1990-2022)</h5>
+                    <canvas id="popChart"></canvas>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-lg-8">
                 <div class="chart-container">
-                    <h5 class="mb-4" id="election-title">Résultats Élections (Chargement...)</h5>
+                    <h5 class="mb-3">Résultats Élections Municipales</h5>
+                    <select id="election-selector" class="form-select mb-3" onchange="updateElectionChart(this.value)">
+                        </select>
                     <canvas id="electionChart"></canvas>
                 </div>
             </div>
@@ -84,17 +95,46 @@
                 </div>
             </div>
         </div>
+        
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="table-responsive p-3">
+                    <h5 class="mb-3"><i class="fas fa-hands-helping"></i> Indicateurs Sociaux Clés</h5>
+                    <table class="table table-bordered table-sm">
+                        <thead>
+                            <tr class="table-light">
+                                <th>Indicateur</th>
+                                <th>Valeur</th>
+                                <th>Source</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>% de Diplômés du Supérieur (15 ans et +)</td>
+                                <td id="social-diplomes" class="fw-bold">--</td>
+                                <td>INSEE (Est.)</td>
+                            </tr>
+                            <tr>
+                                <td>% de Logements Sociaux</td>
+                                <td id="social-logements" class="fw-bold">--</td>
+                                <td>Simulé (Objectif SRU)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
         <div class="row">
             <div class="col-lg-6">
                 <div class="chart-container">
-                    <h5 class="mb-4">Évolution Délinquance (Est. ONDRP)</h5>
+                    <h5 class="mb-4">Évolution Délinquance (ONDRP)</h5>
                     <canvas id="secuChart"></canvas>
                 </div>
             </div>
             <div class="col-lg-6">
                 <div class="chart-container">
-                    <h5 class="mb-4">Taux de Chômage (Tendance INSEE)</h5>
+                    <h5 class="mb-4">Évolution Taux de Chômage (INSEE)</h5>
                     <canvas id="socioChart"></canvas>
                 </div>
             </div>
@@ -123,91 +163,160 @@
 
     <footer class="text-center py-4 text-muted small">
         <p>&copy; 2025 Observatoire Saint-André. Données publiques agrégées via GitHub Actions.</p>
-        <p>Sources : API Géo, API Recherche Entreprises, Ministère de l'Intérieur.</p>
+        <p>Sources : INSEE Historique, API Sirene, Ministère de l'Intérieur.</p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <script>
+        let allData;
+        let electionChartInstance;
+        let siegeChartInstance;
+        let popChartInstance;
+        let secuChartInstance;
+        let socioChartInstance;
+
+        // Fonction pour formater les données électorales
+        function getElectionData(year) {
+            return year === '2020' ? allData.elections_2020 : allData.elections_2014;
+        }
+
+        // Fonction pour mettre à jour les graphiques élections
+        function updateElectionChart(year) {
+            const elecData = getElectionData(year);
+            const is2020 = year === '2020';
+            
+            // Mise à jour du graphique de vote (Barres)
+            if (electionChartInstance) {
+                electionChartInstance.data.labels = elecData.labels;
+                electionChartInstance.data.datasets[0].data = elecData.pourcentages;
+                // Couleurs basées sur l'étiquette (Rouge pour Gauche, Bleu pour Droite)
+                electionChartInstance.data.datasets[0].backgroundColor = is2020 ? ['#dc3545', '#0d6efd'] : ['#0d6efd', '#dc3545'];
+                electionChartInstance.update();
+            }
+
+            // Mise à jour du graphique des sièges (Doughnut)
+            if (siegeChartInstance) {
+                siegeChartInstance.data.labels = elecData.labels;
+                siegeChartInstance.data.datasets[0].data = elecData.sieges;
+                siegeChartInstance.data.datasets[0].backgroundColor = is2020 ? ['#dc3545', '#0d6efd'] : ['#0d6efd', '#dc3545'];
+                siegeChartInstance.update();
+            }
+            
+            // Mise à jour de la participation dans les KPI (pas implémenté ici pour l'instant, mais possible)
+        }
+
+        // Initialisation de la Démographie (Historique Long)
+        function initPopChart(data) {
+             const ctx = document.getElementById('popChart').getContext('2d');
+             popChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.demographie_historique.annees,
+                    datasets: [{
+                        label: 'Population Légale (hab.)',
+                        data: data.demographie_historique.population,
+                        borderColor: '#0043a8',
+                        backgroundColor: 'rgba(0, 67, 168, 0.1)',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    interaction: { mode: 'index', intersect: false },
+                    scales: { y: { beginAtZero: false, ticks: { callback: (val) => val.toLocaleString('fr-FR') } } }
+                }
+            });
+        }
+        
+        // Initialisation du Chômage (Historique Long)
+        function initSocioChart(data) {
+             const ctx = document.getElementById('socioChart').getContext('2d');
+             socioChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.socio_eco.annees_chomage, // Nouvelle série historique
+                    datasets: [{
+                        label: 'Taux Chômage (%)',
+                        data: data.socio_eco.chomage,
+                        borderColor: '#20c997',
+                        backgroundColor: 'rgba(32, 201, 151, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: { responsive: true, scales: { y: { beginAtZero: false, max: 40 } } }
+            });
+        }
+
+        // Initialisation de la Sécurité (Historique Long)
+        function initSecuChart(data) {
+             const ctx = document.getElementById('secuChart').getContext('2d');
+             secuChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.socio_eco.annees_secu, // Nouvelle série historique
+                    datasets: [{
+                        label: 'Cambriolages (Est.)',
+                        data: data.socio_eco.cambriolages,
+                        borderColor: '#fd7e14',
+                        tension: 0.3
+                    }]
+                },
+                options: { responsive: true }
+            });
+        }
+        
+        // Initialisation des graphiques élections (Structure pour être mis à jour ensuite)
+        function initElectionCharts() {
+            const ctxElec = document.getElementById('electionChart').getContext('2d');
+            electionChartInstance = new Chart(ctxElec, { type: 'bar', data: { labels: [], datasets: [{ data: [] }] }, options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 100 } } } });
+
+            const ctxSiege = document.getElementById('siegeChart').getContext('2d');
+            siegeChartInstance = new Chart(ctxSiege, { type: 'doughnut', data: { labels: [], datasets: [{ data: [] }] } });
+        }
+        
+        // Fonction principale (point d'entrée)
         async function loadDashboard() {
             try {
                 const response = await fetch('data.json');
                 if (!response.ok) throw new Error("Fichier data.json introuvable");
                 
-                const data = await response.json();
+                allData = await response.json(); // Stocker toutes les données globalement
 
-                // 2. REMPLISSAGE DES KPI
-                document.getElementById('last-update').innerText = data.meta.last_update;
-                document.getElementById('kpi-pop').innerText = data.kpi.pop;
-                document.getElementById('kpi-entreprises').innerText = data.kpi.entreprises;
-                document.getElementById('kpi-participation').innerText = data.kpi.participation + '%';
-                document.getElementById('kpi-maire').innerText = data.kpi.maire;
+                // 1. Remplissage des KPI
+                document.getElementById('last-update').innerText = allData.meta.last_update;
+                document.getElementById('kpi-pop').innerText = allData.kpi.pop;
+                document.getElementById('kpi-entreprises').innerText = allData.kpi.entreprises;
+                document.getElementById('kpi-revenu').innerText = allData.socio_eco.revenu_median.toLocaleString('fr-FR') + '€';
+                document.getElementById('kpi-maire').innerText = allData.kpi.maire;
+                
+                // 2. Remplissage des Indicateurs Sociaux
+                document.getElementById('social-diplomes').innerText = allData.socio_eco.diplomes_sup_pct.toFixed(1) + '%';
+                document.getElementById('social-logements').innerText = allData.socio_eco.logements_sociaux_pct.toFixed(1) + '%';
 
-                // 3. GRAPHIQUES
-                document.getElementById('election-title').innerText = `Résultats ${data.elections.titre}`;
+                // 3. Remplissage du sélecteur d'élections
+                const selector = document.getElementById('election-selector');
+                selector.innerHTML = '';
+                // 2020 par défaut
+                selector.innerHTML += `<option value="2020">${allData.elections_2020.type}</option>`;
+                // 2014 pour la comparaison
+                selector.innerHTML += `<option value="2014">${allData.elections_2014.type}</option>`;
 
-                new Chart(document.getElementById('electionChart'), {
-                    type: 'bar',
-                    data: {
-                        labels: data.elections.labels,
-                        datasets: [{
-                            label: '% des Voix',
-                            data: data.elections.votes,
-                            backgroundColor: ['#dc3545', '#0d6efd'], 
-                            borderRadius: 5
-                        }]
-                    },
-                    options: { 
-                        responsive: true, 
-                        plugins: { legend: { display: false } },
-                        scales: { y: { beginAtZero: true, max: 100 } }
-                    }
-                });
+                // 4. Initialisation des graphiques (Historiques d'abord)
+                initPopChart(allData);
+                initSecuChart(allData);
+                initSocioChart(allData);
+                initElectionCharts();
+                
+                // 5. Affichage des élections par défaut (2020)
+                updateElectionChart('2020');
 
-                new Chart(document.getElementById('siegeChart'), {
-                    type: 'doughnut',
-                    data: {
-                        labels: data.elections.labels,
-                        datasets: [{
-                            data: data.elections.sieges,
-                            backgroundColor: ['#dc3545', '#0d6efd']
-                        }]
-                    }
-                });
-
-                new Chart(document.getElementById('secuChart'), {
-                    type: 'line',
-                    data: {
-                        labels: data.socio_eco.annees,
-                        datasets: [{
-                            label: 'Cambriolages (Est.)',
-                            data: data.socio_eco.cambriolages,
-                            borderColor: '#fd7e14',
-                            tension: 0.3
-                        }]
-                    },
-                    options: { responsive: true }
-                });
-
-                new Chart(document.getElementById('socioChart'), {
-                    type: 'line',
-                    data: {
-                        labels: data.socio_eco.annees,
-                        datasets: [{
-                            label: 'Taux Chômage (%)',
-                            data: data.socio_eco.chomage,
-                            borderColor: '#20c997',
-                            backgroundColor: 'rgba(32, 201, 151, 0.1)',
-                            fill: true,
-                            tension: 0.4
-                        }]
-                    }
-                });
-
-                // 4. TABLEAU DES ÉLUS
+                // 6. Tableau des Élus
                 const tableBody = document.getElementById('elus-table-body');
                 tableBody.innerHTML = ""; 
-                data.elus.forEach(elu => {
+                allData.elus.forEach(elu => {
                     const row = `
                         <tr>
                             <td class="fw-bold">${elu.nom}</td>
