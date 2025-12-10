@@ -1,16 +1,13 @@
 name: Update Data
-
 on:
   schedule:
     - cron: '0 6 * * 1'
   workflow_dispatch:
-
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
@@ -22,5 +19,5 @@ jobs:
       - run: python update_data.py
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Update History Data"
+          commit_message: "Update Full Dataset"
           file_pattern: data.json
