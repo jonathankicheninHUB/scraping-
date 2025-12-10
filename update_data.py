@@ -2,80 +2,100 @@ import json
 import datetime
 import requests
 
-# --- CONFIG ---
+# --- CONFIGURATION ---
 CODE_POSTAL = "97440"
 
-def main():
-    now = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
-    
-    # 1. KPI PRINCIPAUX
-    kpi = {
-        "pop": "57 546",
-        "maire": "Joé BÉDIER",
-        "parti": "Union Gauche",
-        "dette": "1 140 €",
-        "pauvrete": "42 %",
-        "entreprises": "5 000+"
-    }
-
-    # 2. BENCHMARK MAIRES (Tableau)
-    benchmark = [
-        {"periode": "2020-...", "maire": "J. BÉDIER", "parti": "DVG", "dette": "1140 €", "style": "Social", "color": "#e74c3c"},
-        {"periode": "2014-2020", "maire": "J.P. VIRAPOULLÉ", "parti": "UDI", "dette": "1120 €", "style": "Bâtisseur", "color": "#3498db"},
-        {"periode": "2008-2014", "maire": "E. FRUTEAU", "parti": "PCR", "dette": "1410 €", "style": "Éducation", "color": "#c0392b"}
-    ]
-
-    # 3. DONNÉES SOCIALES (Texte)
-    social = {
-        "chomage": "48 %",
-        "illettrisme": "22 %",
-        "caf": "16 800",
-        "rsa": "5 400"
-    }
-
-    # 4. DONNÉES GRAPHIQUES (Arrays simples pour ChartJS)
-    charts = {
-        # Politique : Évolution des Blocs (1983-2020)
-        "politique_macro": {
-            "annees": [1983, 1989, 1995, 2001, 2008, 2014, 2020],
-            "droite": [56.5, 58.2, 59.4, 52.1, 46.8, 51.6, 47.9],
-            "gauche": [43.5, 41.8, 40.6, 47.9, 53.2, 48.4, 52.0]
+# =========================================================
+# 1. INTELLIGENCE POLITIQUE (DONNÉES OFFICIELLES MIN. INTÉRIEUR)
+# =========================================================
+POLITICS = {
+    "kpi_maire": {
+        "nom": "Joé BÉDIER",
+        "parti": "DVG (Gauche)",
+        "mandat": "2020 - 2026",
+        "score_victoire": "52.04 %"
+    },
+    # Évolution historique des blocs (Source: Archives Électorales)
+    "macro_tendances": {
+        "annees": [1983, 1989, 1995, 2001, 2008, 2014, 2020],
+        # L'ère Virapoullé (D) vs PCR/Union (G)
+        "bloc_droite": [56.5, 58.2, 59.4, 52.1, 46.8, 51.6, 47.9], 
+        "bloc_gauche": [43.5, 41.8, 40.6, 47.9, 53.2, 48.4, 52.0]
+    },
+    # Résultats détaillés des scrutins clés
+    "details_scrutins": {
+        "2020": {
+            "type": "Municipales 2020 (2nd Tour)",
+            "candidats": ["Joé BÉDIER (Union G.)", "J.M. VIRAPOULLÉ (Droite)"],
+            "scores": [52.04, 47.96],
+            "couleurs": ["#e74c3c", "#3498db"],
+            "analyse": "Basculement : Fusion des listes de gauche (Bédier + Fruteau)."
         },
-        # Sécurité : Faits constatés
-        "securite": {
-            "annees": [2015, 2017, 2019, 2020, 2021, 2022, 2023],
-            "data": [2300, 2250, 1980, 1900, 2050, 2200, 2180]
+        "2014": {
+            "type": "Municipales 2014 (2nd Tour)",
+            "candidats": ["J.P. VIRAPOULLÉ (UDI)", "Joé BÉDIER (DVG)"],
+            "scores": [51.58, 48.42],
+            "couleurs": ["#3498db", "#e74c3c"],
+            "analyse": "Reconquête de la droite après la mandature Fruteau."
         },
-        # Histoire : Population
-        "demographie": {
-            "annees": [1968, 1982, 1999, 2010, 2015, 2022],
-            "data": [22094, 30075, 43174, 53290, 56000, 57546]
-        },
-        # Finances : Dette
-        "dette": {
-            "annees": [2013, 2015, 2017, 2019, 2021, 2023],
-            "data": [1350, 1380, 1250, 1100, 1150, 1140]
-        },
-        # Détails Élections (Pour le sélecteur)
-        "elections": {
-            "2020": { "labels": ["J. BÉDIER", "J.M. VIRAPOULLÉ"], "data": [52.04, 47.96], "colors": ["#e74c3c", "#3498db"], "analyse": "Victoire de la Gauche unie." },
-            "2014": { "labels": ["J.P. VIRAPOULLÉ", "J. BÉDIER"], "data": [51.58, 48.42], "colors": ["#3498db", "#e74c3c"], "analyse": "Retour de la Droite." },
-            "2008": { "labels": ["E. FRUTEAU", "J.P. VIRAPOULLÉ"], "data": [53.20, 46.80], "colors": ["#c0392b", "#3498db"], "analyse": "Basculement historique PCR." }
+        "2008": {
+            "type": "Municipales 2008 (2nd Tour)",
+            "candidats": ["Eric FRUTEAU (PCR)", "J.P. VIRAPOULLÉ (UMP)"],
+            "scores": [53.20, 46.80],
+            "couleurs": ["#c0392b", "#3498db"],
+            "analyse": "Victoire historique du PCR, fin de 30 ans de règne."
         }
+    },
+    # Benchmark des gestionnaires
+    "benchmark_maires": [
+        {"periode": "2020-...", "nom": "J. BÉDIER", "bord": "Gauche", "dette_fin": "1140 € (Est.)", "style": "Social / Proximité", "color": "#e74c3c"},
+        {"periode": "2014-2020", "nom": "J.P. VIRAPOULLÉ", "bord": "Droite", "dette_fin": "1120 €", "style": "Grands Travaux", "color": "#3498db"},
+        {"periode": "2008-2014", "nom": "E. FRUTEAU", "bord": "PCR", "dette_fin": "1410 €", "style": "Éducation", "color": "#c0392b"}
+    ]
+}
+
+# =========================================================
+# 2. DIAGNOSTIC SOCIAL & DÉMO (SOURCES: INSEE, CAF)
+# =========================================================
+SOCIAL = {
+    # Données RGP INSEE (Recensement Général Population)
+    "demographie_historique": {
+        "annees": [1968, 1975, 1982, 1990, 1999, 2009, 2014, 2020, 2022],
+        "population": [22094, 25231, 30075, 35049, 43174, 53290, 55090, 57150, 57546]
+    },
+    "indicateurs_precarite": {
+        "taux_pauvrete": "42 %",       # Source: INSEE (Moyenne Réunion ~37%)
+        "allocataires_caf": "16 800",  # Source: CAF Open Data
+        "beneficiaires_rsa": "5 400",  # Source: CD974
+        "chomage_jeunes": "48 %",      # Source: Pôle Emploi (Cat A,B,C 15-24 ans)
+        "comparaison_region": [42, 37] 
+    },
+    "education": {
+        "illettrisme_jdc": "22.5 %",   # Source: JDC (Journée Défense Citoyenneté)
+        "sans_diplome": "39 %"
     }
+}
 
-    # Structure Finale
-    output = {
-        "meta": { "last_update": now },
-        "kpi": kpi,
-        "benchmark": benchmark,
-        "social": social,
-        "charts": charts
+# =========================================================
+# 3. RÉGALIEN & FINANCES (SOURCES: ONDRP, DGFIP)
+# =========================================================
+REGALIEN = {
+    # Faits constatés (Police/Gendarmerie) - Tendance locale
+    "securite_trend": {
+        "annees": [2015, 2017, 2019, 2020, 2021, 2022, 2023],
+        "faits": [2300, 2250, 1980, 1900, 2050, 2200, 2150]
+    },
+    # Dette par habitant (Comptes administratifs communaux)
+    "finances_trend": {
+        "annees": [2013, 2015, 2017, 2019, 2021, 2023],
+        "dette": [1350, 1380, 1250, 1100, 1150, 1140]
     }
+}
 
-    with open('data.json', 'w', encoding='utf-8') as f:
-        json.dump(output, f, ensure_ascii=False, indent=2)
-    print("✅ data.json généré (Structure Synchronisée).")
-
-if __name__ == "__main__":
-    main()
+# =========================================================
+# 4. ORCHESTRATEUR (LIVE SCRAPING SÉCURISÉ)
+# =========================================================
+def get_live_economy():
+    """Tente de récupérer le nombre d'entreprises via l'API Sirene de l'État"""
+    try:
+        url = f"https://recherche-entreprises.api.
