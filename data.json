@@ -5,39 +5,35 @@
   "kpi": {
     "pop": "57 546",
     "maire": "Joé BÉDIER",
-    "parti_maire": "DVG (Gauche)",
-    "dette": "1 140 €",
-    "chomage": "29 %",
+    "parti": "DVG (Gauche)",
+    "dette_hab": "1 140 €",
+    "chomage": "29.2 %",
+    "revenu": "14 500 €",
     "entreprises": "10 000"
   },
   "politics": {
     "municipales_2020": {
       "tour_1": {
-        "participation": 46.5,
         "candidats": [
           "J.M. VIRAPOULLÉ (DVD)",
           "Joé BÉDIER (DVG)",
           "Eric FRUTEAU (PCR)",
-          "J-F. RAMASSAMY",
-          "Sylvie MOUTOUCOMORAPOULE"
+          "Autres"
         ],
         "scores": [
           31.47,
           24.94,
           17.56,
-          4.35,
-          3.42
+          26.03
         ],
         "couleurs": [
           "#0d6efd",
           "#dc3545",
           "#b30000",
-          "#ffc107",
-          "#6f42c1"
+          "#6c757d"
         ]
       },
       "tour_2": {
-        "participation": 62.74,
         "candidats": [
           "Joé BÉDIER (Union Gauche)",
           "J.M. VIRAPOULLÉ (Divers Droite)"
@@ -50,62 +46,64 @@
           "#dc3545",
           "#0d6efd"
         ]
-      },
-      "analyse": "Victoire due à l'union des gauches (Bédier + Fruteau) au 2nd tour face à la droite divisée."
+      }
     },
-    "presidentielle_2022_t1": {
-      "contexte": "Vote de la ville à la Présidentielle (Contexte idéologique)",
+    "presidentielle_2022": {
       "candidats": [
         "J.L. MÉLENCHON",
         "M. LE PEN",
         "E. MACRON",
-        "E. ZEMMOUR",
-        "V. PÉCRESSE"
+        "E. ZEMMOUR"
       ],
       "scores": [
         51.5,
         23.4,
         14.2,
-        3.1,
-        1.8
+        3.1
       ],
       "couleurs": [
         "#cc2443",
         "#002e61",
         "#ffeb00",
-        "#5c3c16",
-        "#0066cc"
+        "#5c3c16"
       ]
     }
   },
   "history": {
     "annees_demo": [
-      1990,
+      1968,
+      1982,
       1999,
       2011,
-      2016,
       2022
     ],
     "pop": [
-      35049,
+      22094,
+      30075,
       43174,
       55090,
-      56268,
       57546
     ],
-    "annees_dette": [
-      2016,
-      2018,
-      2020,
-      2022,
+    "annees_fin": [
+      2013,
+      2015,
+      2017,
+      2019,
+      2021,
       2023
     ],
     "dette": [
-      1320,
-      1180,
-      1120,
-      1180,
+      1350,
+      1380,
+      1250,
+      1100,
+      1150,
       1140
     ]
+  },
+  "finance": {
+    "foncier_bati": "38.50 %",
+    "foncier_non_bati": "45.20 %",
+    "habitation_sec": "22.50 %"
   }
 }
