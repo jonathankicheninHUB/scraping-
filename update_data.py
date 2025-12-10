@@ -7,13 +7,12 @@ CODE_INSEE = "97411" # Code officiel INSEE de St André (La Réunion)
 CODE_POSTAL = "97440"
 
 # --- 1. DONNÉES ÉLECTORALES (OFFICIELLES 2020 - 2nd TOUR) ---
-# Résultats fixes, stockés en dur pour la rapidité et la fiabilité.
 REAL_ELECTION_2020 = {
     "type": "Municipales 2020 (2nd Tour)",
-    "participation": 62.74, # Taux officiel
+    "participation": 62.74,
     "labels": ["Joé BÉDIER (Union Gauche)", "J-Marie VIRAPOULLÉ (Divers Droite)"],
     "pourcentages": [52.04, 47.96],
-    "sieges": [30, 9] # Répartition conseil municipal (Majorité/Opposition)
+    "sieges": [30, 9] 
 }
 
 # --- 2. FONCTIONS API (LIVE DATA) ---
@@ -35,7 +34,6 @@ def get_demographics():
 
 def get_economy_stats():
     """Récupère le nombre d'entreprises actives via recherche-entreprises.api.gouv.fr"""
-    # On compte les entreprises domiciliées à 97440
     url = f"https://recherche-entreprises.api.gouv.fr/search?code_postal={CODE_POSTAL}&page=1&per_page=1"
     print(f"📡 Récupération Économie...")
     try:
@@ -46,18 +44,16 @@ def get_economy_stats():
         return total
     except Exception as e:
         print(f"❌ Erreur API Entreprises: {e}")
-        return 5000 # Valeur par défaut réaliste
+        return 5000
 
 # --- 3. ORCHESTRATION ---
 
 def main():
     now = datetime.datetime.now().strftime("%d/%m/%Y à %H:%M")
     
-    # Récupération des données live
     demo = get_demographics()
     nb_entreprises = get_economy_stats()
     
-    # Construction du JSON final (Maire codé en dur pour fiabilité, car l'API est plus robuste)
     output = {
         "meta": {
             "last_update": now,
@@ -67,7 +63,7 @@ def main():
             "pop": f"{demo['pop']:,}".replace(",", " "),
             "entreprises": f"{nb_entreprises:,}".replace(",", " "),
             "participation": str(REAL_ELECTION_2020["participation"]),
-            "maire": "Joé BÉDIER" # Fixé pour éviter le scraping fragile
+            "maire": "Joé BÉDIER" 
         },
         "elections": {
             "titre": REAL_ELECTION_2020["type"],
@@ -75,7 +71,6 @@ def main():
             "votes": REAL_ELECTION_2020["pourcentages"],
             "sieges": REAL_ELECTION_2020["sieges"]
         },
-        # Données historiques ou estimées pour les graphiques
         "socio_eco": {
             "annees": [2019, 2020, 2021, 2022, 2023],
             "chomage": [32.0, 31.5, 30.0, 29.2, 28.8], 
@@ -89,7 +84,6 @@ def main():
         ]
     }
 
-    # Sauvegarde du JSON
     with open('data.json', 'w', encoding='utf-8') as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
     
