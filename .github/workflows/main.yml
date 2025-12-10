@@ -1,35 +1,23 @@
-name: Update Dashboard Data
-
+name: Update Data
 on:
   schedule:
     - cron: '0 6 * * 1'
   workflow_dispatch:
-
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # <--- C'est la ligne magique qui manquait peut-être
-
+      contents: write
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-
-      - name: Install dependencies
-        run: |
+      - run: |
           python -m pip install --upgrade pip
           pip install requests
-
-      - name: Run Scraper
-        run: python update_data.py
-
-      - name: Commit and push data.json
-        uses: stefanzweifel/git-auto-commit-action@v5
+      - run: python update_data.py
+      - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Update Full Data"
           file_pattern: data.json
